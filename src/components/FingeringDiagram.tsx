@@ -1,12 +1,16 @@
 import type { Diagram, DiagramPosition } from '../types.ts'
+import type { FretNote } from '../utils/musicTheory.ts'
+import FretboardNeck from './FretboardNeck.tsx'
 
-const STRING_COUNT = 6
-const CHORD_FRET_ROWS = 4
-const CELL_W = 36
-const CELL_H = 36
-const LEFT_MARGIN = 28
-const TOP_MARGIN = 32
-const DOT_R = 12
+// ─── Chord box ────────────────────────────────────────────────────────────────
+
+const C_STRINGS = 6
+const C_ROWS = 4
+const CW = 36
+const CH = 36
+const CL = 32
+const CT = 36
+const CDR = 13
 
 interface ChordDiagramProps {
   diagram: Diagram
@@ -16,122 +20,84 @@ function ChordDiagram({ diagram }: ChordDiagramProps) {
   const { positions = [], barre, position_marker, tuning } = diagram
   const isOpen = position_marker === 0
 
-  const svgWidth = LEFT_MARGIN + (STRING_COUNT - 1) * CELL_W + LEFT_MARGIN
-  const svgHeight = TOP_MARGIN + CHORD_FRET_ROWS * CELL_H + 20
-
-  const frettedPositions = positions.filter((p) => p.fret > 0)
-  const minFret = frettedPositions.length > 0 ? Math.min(...frettedPositions.map((p) => p.fret)) : 1
+  const frettedPos = positions.filter((p) => p.fret > 0)
+  const minFret = frettedPos.length > 0 ? Math.min(...frettedPos.map((p) => p.fret)) : 1
   const startFret = isOpen ? 1 : minFret
 
+  const svgW = CL + (C_STRINGS - 1) * CW + CL
+  const svgH = CT + C_ROWS * CH + 24
+
   return (
-    <svg
-      width={svgWidth}
-      height={svgHeight}
-      viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-      aria-label="Chord diagram"
-    >
+    <svg width={svgW} height={svgH} viewBox={`0 0 ${svgW} ${svgH}`} aria-label="Chord diagram" style={{ display: 'block' }}>
+      {/* Background */}
+      <rect x={CL} y={CT} width={(C_STRINGS - 1) * CW} height={C_ROWS * CH} fill="#0e0a04" rx="2" />
+
+      {/* Position marker */}
       {!isOpen && (
-        <text
-          x={LEFT_MARGIN - 6}
-          y={TOP_MARGIN + CELL_H / 2 + 4}
-          textAnchor="end"
-          fontSize="11"
-          fill="var(--color-muted)"
-        >
+        <text x={CL - 8} y={CT + CH / 2 + 4} textAnchor="end" fontSize="11" fontFamily="monospace" fill="#8a8070">
           {startFret}fr
         </text>
       )}
 
+      {/* Nut */}
       {isOpen && (
-        <rect
-          x={LEFT_MARGIN}
-          y={TOP_MARGIN - 5}
-          width={(STRING_COUNT - 1) * CELL_W}
-          height={5}
-          fill="var(--color-text)"
-          rx="1"
-        />
+        <rect x={CL} y={CT - 5} width={(C_STRINGS - 1) * CW} height={5} fill="#e8e0d0" rx="1" />
       )}
 
-      {Array.from({ length: CHORD_FRET_ROWS + 1 }).map((_, i) => (
-        <line
-          key={i}
-          x1={LEFT_MARGIN}
-          y1={TOP_MARGIN + i * CELL_H}
-          x2={LEFT_MARGIN + (STRING_COUNT - 1) * CELL_W}
-          y2={TOP_MARGIN + i * CELL_H}
-          stroke="var(--color-border)"
-          strokeWidth={1}
+      {/* Fret lines */}
+      {Array.from({ length: C_ROWS + 1 }, (_, i) => (
+        <line key={i} x1={CL} y1={CT + i * CH} x2={CL + (C_STRINGS - 1) * CW} y2={CT + i * CH}
+          stroke="#4a4540" strokeWidth={1} />
+      ))}
+
+      {/* String lines (varying thickness) */}
+      {Array.from({ length: C_STRINGS }, (_, s) => (
+        <line key={s}
+          x1={CL + s * CW} y1={CT}
+          x2={CL + s * CW} y2={CT + C_ROWS * CH}
+          stroke="#8a8070"
+          strokeWidth={[2.8, 2.2, 1.8, 1.4, 1.1, 0.8][C_STRINGS - 1 - s]}
         />
       ))}
 
-      {Array.from({ length: STRING_COUNT }).map((_, s) => (
-        <line
-          key={s}
-          x1={LEFT_MARGIN + s * CELL_W}
-          y1={TOP_MARGIN}
-          x2={LEFT_MARGIN + s * CELL_W}
-          y2={TOP_MARGIN + CHORD_FRET_ROWS * CELL_H}
-          stroke="var(--color-border)"
-          strokeWidth={1}
-        />
-      ))}
-
+      {/* Barre */}
       {barre && (
         <rect
-          x={LEFT_MARGIN + (STRING_COUNT - 1 - barre.to_string) * CELL_W - DOT_R}
-          y={TOP_MARGIN + (barre.fret - startFret) * CELL_H + CELL_H / 2 - DOT_R}
-          width={(barre.to_string - barre.from_string) * CELL_W + DOT_R * 2}
-          height={DOT_R * 2}
-          rx={DOT_R}
-          fill="var(--color-accent)"
+          x={CL + (C_STRINGS - 1 - barre.to_string) * CW - CDR}
+          y={CT + (barre.fret - startFret) * CH + CH / 2 - CDR}
+          width={(barre.to_string - barre.from_string) * CW + CDR * 2}
+          height={CDR * 2}
+          rx={CDR}
+          fill="#f97316"
           opacity={0.9}
         />
       )}
 
+      {/* Finger dots */}
       {positions.map((pos: DiagramPosition, idx: number) => {
-        const sx = LEFT_MARGIN + (STRING_COUNT - 1 - pos.string) * CELL_W
+        const sx = CL + (C_STRINGS - 1 - pos.string) * CW
         if (pos.fret === -1) {
           return (
-            <text
-              key={idx}
-              x={sx}
-              y={TOP_MARGIN - 10}
-              textAnchor="middle"
-              fontSize="14"
-              fill="var(--color-muted)"
-            >
-              ×
-            </text>
+            <text key={idx} x={sx} y={CT - 12} textAnchor="middle" fontSize="16" fill="#8a8070">×</text>
           )
         }
         if (pos.fret === 0) {
           return (
-            <circle
-              key={idx}
-              cx={sx}
-              cy={TOP_MARGIN - 12}
-              r={6}
+            <circle key={idx} cx={sx} cy={CT - 13} r={6}
               fill="none"
-              stroke={pos.role === 'root' ? 'var(--color-accent)' : 'var(--color-muted)'}
+              stroke={pos.role === 'root' ? '#f97316' : '#8a8070'}
               strokeWidth={1.5}
             />
           )
         }
-        const fy = TOP_MARGIN + (pos.fret - startFret) * CELL_H + CELL_H / 2
-        const fill = pos.role === 'root' ? 'var(--color-accent)' : 'var(--color-text)'
+        const fy = CT + (pos.fret - startFret) * CH + CH / 2
+        const fill = pos.role === 'root' ? '#f97316' : '#1e40af'
+        const textFill = '#ffffff'
         return (
           <g key={idx}>
-            <circle cx={sx} cy={fy} r={DOT_R} fill={fill} />
+            <circle cx={sx} cy={fy} r={CDR} fill={fill} />
             {pos.finger > 0 && (
-              <text
-                x={sx}
-                y={fy + 4}
-                textAnchor="middle"
-                fontSize="11"
-                fontWeight="bold"
-                fill={pos.role === 'root' ? '#fff' : 'var(--color-bg)'}
-              >
+              <text x={sx} y={fy + 4} textAnchor="middle" fontSize="11" fontWeight="bold" fontFamily="monospace" fill={textFill}>
                 {pos.finger}
               </text>
             )}
@@ -139,162 +105,73 @@ function ChordDiagram({ diagram }: ChordDiagramProps) {
         )
       })}
 
-      {tuning &&
-        tuning.map((note, i) => (
-          <text
-            key={i}
-            x={LEFT_MARGIN + i * CELL_W}
-            y={svgHeight - 4}
-            textAnchor="middle"
-            fontSize="9"
-            fill="var(--color-muted)"
-          >
-            {note}
-          </text>
-        ))}
+      {/* String/tuning labels at bottom */}
+      {tuning?.map((note, i) => (
+        <text key={i} x={CL + i * CW} y={svgH - 4}
+          textAnchor="middle" fontSize="9" fontFamily="monospace" fill="#8a8070">
+          {note}
+        </text>
+      ))}
     </svg>
   )
 }
 
-interface ScaleDiagramProps {
-  diagram: Diagram
-}
-
-function ScaleDiagram({ diagram }: ScaleDiagramProps) {
-  const { positions = [], tuning } = diagram
-
-  if (!positions.length) return null
-
-  const frets = positions.map((p) => p.fret)
-  const minFret = Math.max(0, Math.min(...frets))
-  const maxFret = Math.max(...frets)
-  const fretSpan = Math.max(maxFret - minFret, 3)
-
-  const SCALE_CELL_W = 44
-  const SCALE_CELL_H = 28
-  const SCALE_LEFT = 36
-  const SCALE_TOP = 20
-  const numFrets = fretSpan + 1
-
-  const svgWidth = SCALE_LEFT + numFrets * SCALE_CELL_W + 20
-  const svgHeight = SCALE_TOP + (STRING_COUNT - 1) * SCALE_CELL_H + 24
-
-  return (
-    <svg
-      width={svgWidth}
-      height={svgHeight}
-      viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-      aria-label="Scale diagram"
-    >
-      {Array.from({ length: numFrets + 1 }).map((_, f) => {
-        const fretNum = minFret + f
-        return (
-          <text
-            key={f}
-            x={SCALE_LEFT + f * SCALE_CELL_W}
-            y={SCALE_TOP - 6}
-            textAnchor="middle"
-            fontSize="10"
-            fill="var(--color-muted)"
-          >
-            {fretNum === 0 ? 'O' : fretNum}
-          </text>
-        )
-      })}
-
-      {minFret === 0 && (
-        <rect
-          x={SCALE_LEFT - 3}
-          y={SCALE_TOP}
-          width={4}
-          height={(STRING_COUNT - 1) * SCALE_CELL_H}
-          fill="var(--color-text)"
-          rx="1"
-        />
-      )}
-
-      {Array.from({ length: numFrets + 1 }).map((_, f) => (
-        <line
-          key={f}
-          x1={SCALE_LEFT + f * SCALE_CELL_W}
-          y1={SCALE_TOP}
-          x2={SCALE_LEFT + f * SCALE_CELL_W}
-          y2={SCALE_TOP + (STRING_COUNT - 1) * SCALE_CELL_H}
-          stroke="var(--color-border)"
-          strokeWidth={1}
-        />
-      ))}
-
-      {Array.from({ length: STRING_COUNT }).map((_, s) => (
-        <line
-          key={s}
-          x1={SCALE_LEFT}
-          y1={SCALE_TOP + s * SCALE_CELL_H}
-          x2={SCALE_LEFT + numFrets * SCALE_CELL_W}
-          y2={SCALE_TOP + s * SCALE_CELL_H}
-          stroke="var(--color-border)"
-          strokeWidth={s === 0 || s === STRING_COUNT - 1 ? 1.5 : 1}
-        />
-      ))}
-
-      {positions.map((pos: DiagramPosition, idx: number) => {
-        const cx =
-          pos.fret === 0
-            ? SCALE_LEFT - SCALE_CELL_W * 0.3
-            : SCALE_LEFT + (pos.fret - minFret) * SCALE_CELL_W - SCALE_CELL_W / 2
-        const sy = SCALE_TOP + (STRING_COUNT - 1 - pos.string) * SCALE_CELL_H
-        const fill = pos.role === 'root' ? 'var(--color-accent)' : 'var(--color-text)'
-        const textFill = pos.role === 'root' ? '#fff' : 'var(--color-bg)'
-        return (
-          <g key={idx}>
-            <circle cx={cx} cy={sy} r={10} fill={fill} />
-            {pos.finger > 0 && (
-              <text
-                x={cx}
-                y={sy + 4}
-                textAnchor="middle"
-                fontSize="9"
-                fontWeight="bold"
-                fill={textFill}
-              >
-                {pos.finger}
-              </text>
-            )}
-          </g>
-        )
-      })}
-
-      {tuning &&
-        [...tuning].reverse().map((note, i) => (
-          <text
-            key={i}
-            x={SCALE_LEFT - 8}
-            y={SCALE_TOP + i * SCALE_CELL_H + 4}
-            textAnchor="end"
-            fontSize="9"
-            fill="var(--color-muted)"
-          >
-            {note}
-          </text>
-        ))}
-    </svg>
-  )
-}
+// ─── Public component ─────────────────────────────────────────────────────────
 
 interface FingeringDiagramProps {
   diagram: Diagram
+  /** Pre-computed full-neck notes for scale/arpeggio view */
+  fullNeckNotes?: FretNote[]
+  positionRange?: [number, number] | null
 }
 
-export default function FingeringDiagram({ diagram }: FingeringDiagramProps) {
+export default function FingeringDiagram({ diagram, fullNeckNotes, positionRange }: FingeringDiagramProps) {
   if (!diagram) return null
 
-  return (
-    <div className="rounded-lg p-4 overflow-x-auto" style={{ backgroundColor: 'var(--color-bg)' }}>
-      {diagram.type === 'chord' ? (
+  if (diagram.type === 'chord') {
+    return (
+      <div className="overflow-x-auto rounded-xl p-4" style={{ backgroundColor: '#0e0a04' }}>
         <ChordDiagram diagram={diagram} />
-      ) : (
-        <ScaleDiagram diagram={diagram} />
-      )}
+      </div>
+    )
+  }
+
+  // Scale / arpeggio: use full-neck view if available, otherwise fall back to position-only
+  if (fullNeckNotes && fullNeckNotes.length > 0) {
+    return (
+      <div className="overflow-x-auto rounded-xl p-3" style={{ backgroundColor: '#0e0a04' }}>
+        <FretboardNeck
+          notes={fullNeckNotes}
+          startFret={0}
+          endFret={14}
+          showNoteNames={true}
+          positionRange={positionRange}
+        />
+      </div>
+    )
+  }
+
+  // Fallback: build notes from diagram.positions
+  const fallbackNotes: FretNote[] = (diagram.positions ?? []).map((p) => ({
+    string: p.string,
+    fret: p.fret,
+    noteName: '',
+    isRoot: p.role === 'root',
+    semitone: 0,
+  }))
+
+  const frets = fallbackNotes.map((n) => n.fret).filter((f) => f >= 0)
+  const minF = frets.length ? Math.max(0, Math.min(...frets)) : 0
+  const maxF = frets.length ? Math.max(...frets) : 5
+
+  return (
+    <div className="overflow-x-auto rounded-xl p-3" style={{ backgroundColor: '#0e0a04' }}>
+      <FretboardNeck
+        notes={fallbackNotes}
+        startFret={minF}
+        endFret={maxF + 1}
+        showNoteNames={false}
+      />
     </div>
   )
 }
