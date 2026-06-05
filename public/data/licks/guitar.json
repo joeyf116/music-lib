@@ -1,0 +1,124 @@
+[
+  {
+    "id": "lick-blues-turnaround-e-guitar",
+    "type": "lick",
+    "name": "Classic Blues Turnaround — E",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "E",
+    "style": "blues",
+    "context": "I-IV-V blues progression turnaround in E, typically played in bars 11-12",
+    "position": "Open",
+    "fret_range": [0, 4],
+    "difficulty": "intermediate",
+    "tab": "e|--0-----------0---|\nB|----3b4r3---0-----|\nG|----------1-------|\nD|------------------|\nA|------------------|\nE|--0---------------|",
+    "diagram": {
+      "type": "scale",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": 0, "finger": 0, "role": "root"},
+        {"string": 2, "fret": 3, "finger": 3, "role": "note"},
+        {"string": 2, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 1, "fret": 1, "finger": 1, "role": "note"},
+        {"string": 0, "fret": 0, "finger": 0, "role": "root"}
+      ],
+      "position_marker": 0
+    },
+    "formula": "1 b3 4 5 b7",
+    "tags": ["intermediate", "blues", "turnaround", "classic", "SRV", "BB King"]
+  },
+  {
+    "id": "lick-jazz-ii-v-i-c-guitar",
+    "type": "lick",
+    "name": "Jazz ii-V-I Lick — C",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "C",
+    "style": "jazz",
+    "context": "ii-V-I progression in C major (Dm7 - G7 - Cmaj7), bebop vocabulary",
+    "position": "5th",
+    "fret_range": [5, 10],
+    "difficulty": "advanced",
+    "tab": "e|--8-10-8-----------|\nB|----------10-8-7---|\nG|-------------------|\nD|--5-7-5------------|\nA|-----------5-7-5---|\nE|-------------------|",
+    "diagram": {
+      "type": "scale",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 4, "fret": 5, "finger": 1, "role": "note"},
+        {"string": 4, "fret": 7, "finger": 3, "role": "note"},
+        {"string": 3, "fret": 5, "finger": 1, "role": "note"},
+        {"string": 3, "fret": 7, "finger": 3, "role": "note"},
+        {"string": 2, "fret": 7, "finger": 3, "role": "note"},
+        {"string": 2, "fret": 8, "finger": 4, "role": "note"},
+        {"string": 1, "fret": 8, "finger": 2, "role": "root"},
+        {"string": 1, "fret": 10, "finger": 4, "role": "note"},
+        {"string": 0, "fret": 8, "finger": 2, "role": "note"},
+        {"string": 0, "fret": 10, "finger": 4, "role": "note"}
+      ],
+      "position_marker": 5
+    },
+    "formula": "1 2 3 4 5 6 7",
+    "tags": ["advanced", "jazz", "ii-V-I", "bebop", "Charlie Parker"]
+  },
+  {
+    "id": "lick-rock-pentatonic-bend-a-guitar",
+    "type": "lick",
+    "name": "Rock Pentatonic Bend — A",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "A",
+    "style": "rock",
+    "context": "Classic rock lead lick using bends from A minor pentatonic, high on neck",
+    "position": "5th",
+    "fret_range": [5, 10],
+    "difficulty": "intermediate",
+    "tab": "e|--5-8b10r8-5-------|\nB|------------8-5----|\nG|----------------7--|\nD|-------------------|\nA|-------------------|\nE|-------------------|",
+    "diagram": {
+      "type": "scale",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 2, "fret": 7, "finger": 3, "role": "note"},
+        {"string": 1, "fret": 5, "finger": 1, "role": "note"},
+        {"string": 1, "fret": 8, "finger": 4, "role": "note"},
+        {"string": 0, "fret": 5, "finger": 1, "role": "root"},
+        {"string": 0, "fret": 8, "finger": 4, "role": "note"}
+      ],
+      "position_marker": 5
+    },
+    "formula": "1 b3 4 5 b7",
+    "tags": ["intermediate", "rock", "pentatonic", "bend", "Hendrix", "Page"]
+  },
+  {
+    "id": "lick-funk-muted-groove-e-guitar",
+    "type": "lick",
+    "name": "Funk Muted Groove — E",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "E",
+    "style": "funk",
+    "context": "Funky rhythm lick using palm muting and 16th-note groove on E minor pentatonic",
+    "position": "Open",
+    "fret_range": [0, 4],
+    "difficulty": "intermediate",
+    "tab": "e|----------------------------|\nB|----------------------------|\nG|----------------------------|\nD|--xx-2--xx-2-4--xx-2--------|\nA|--xx-2--xx-2-4--xx-2--------|\nE|--0----0------0----0--------|",
+    "diagram": {
+      "type": "scale",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": 0, "finger": 0, "role": "root"},
+        {"string": 4, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 4, "fret": 2, "finger": 2, "role": "note"},
+        {"string": 4, "fret": 4, "finger": 4, "role": "note"},
+        {"string": 3, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 3, "fret": 2, "finger": 2, "role": "note"}
+      ],
+      "position_marker": 0
+    },
+    "formula": "1 b3 4 5 b7",
+    "tags": ["intermediate", "funk", "muted", "rhythm", "groove", "Nile Rodgers"]
+  }
+]

@@ -1,0 +1,362 @@
+[
+  {
+    "id": "chord-c-major-open-guitar-6-standard",
+    "type": "chord",
+    "name": "C Major — Open",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "C",
+    "chord_type": "major",
+    "position": "Open",
+    "fret_range": [0, 3],
+    "difficulty": "beginner",
+    "tab": "e|--0--|\nB|--1--|\nG|--0--|\nD|--2--|\nA|--3--|\nE|--x--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": -1, "finger": 0, "role": "muted"},
+        {"string": 4, "fret": 3, "finger": 3, "role": "root"},
+        {"string": 3, "fret": 2, "finger": 2, "role": "note"},
+        {"string": 2, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 1, "fret": 1, "finger": 1, "role": "note"},
+        {"string": 0, "fret": 0, "finger": 0, "role": "note"}
+      ],
+      "position_marker": 0,
+      "barre": null
+    },
+    "formula": "1 3 5",
+    "tags": ["beginner", "open", "major", "CAGED"]
+  },
+  {
+    "id": "chord-g-major-open-guitar-6-standard",
+    "type": "chord",
+    "name": "G Major — Open",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "G",
+    "chord_type": "major",
+    "position": "Open",
+    "fret_range": [0, 3],
+    "difficulty": "beginner",
+    "tab": "e|--3--|\nB|--3--|\nG|--0--|\nD|--0--|\nA|--2--|\nE|--3--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": 3, "finger": 2, "role": "root"},
+        {"string": 4, "fret": 2, "finger": 1, "role": "note"},
+        {"string": 3, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 2, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 1, "fret": 3, "finger": 3, "role": "note"},
+        {"string": 0, "fret": 3, "finger": 4, "role": "root"}
+      ],
+      "position_marker": 0,
+      "barre": null
+    },
+    "formula": "1 3 5",
+    "tags": ["beginner", "open", "major", "CAGED"]
+  },
+  {
+    "id": "chord-d-major-open-guitar-6-standard",
+    "type": "chord",
+    "name": "D Major — Open",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "D",
+    "chord_type": "major",
+    "position": "Open",
+    "fret_range": [0, 3],
+    "difficulty": "beginner",
+    "tab": "e|--2--|\nB|--3--|\nG|--2--|\nD|--0--|\nA|--x--|\nE|--x--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": -1, "finger": 0, "role": "muted"},
+        {"string": 4, "fret": -1, "finger": 0, "role": "muted"},
+        {"string": 3, "fret": 0, "finger": 0, "role": "root"},
+        {"string": 2, "fret": 2, "finger": 1, "role": "note"},
+        {"string": 1, "fret": 3, "finger": 3, "role": "note"},
+        {"string": 0, "fret": 2, "finger": 2, "role": "note"}
+      ],
+      "position_marker": 0,
+      "barre": null
+    },
+    "formula": "1 3 5",
+    "tags": ["beginner", "open", "major", "CAGED"]
+  },
+  {
+    "id": "chord-a-major-open-guitar-6-standard",
+    "type": "chord",
+    "name": "A Major — Open",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "A",
+    "chord_type": "major",
+    "position": "Open",
+    "fret_range": [0, 2],
+    "difficulty": "beginner",
+    "tab": "e|--0--|\nB|--2--|\nG|--2--|\nD|--2--|\nA|--0--|\nE|--x--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": -1, "finger": 0, "role": "muted"},
+        {"string": 4, "fret": 0, "finger": 0, "role": "root"},
+        {"string": 3, "fret": 2, "finger": 2, "role": "note"},
+        {"string": 2, "fret": 2, "finger": 3, "role": "note"},
+        {"string": 1, "fret": 2, "finger": 4, "role": "note"},
+        {"string": 0, "fret": 0, "finger": 0, "role": "note"}
+      ],
+      "position_marker": 0,
+      "barre": null
+    },
+    "formula": "1 3 5",
+    "tags": ["beginner", "open", "major", "CAGED"]
+  },
+  {
+    "id": "chord-e-major-open-guitar-6-standard",
+    "type": "chord",
+    "name": "E Major — Open",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "E",
+    "chord_type": "major",
+    "position": "Open",
+    "fret_range": [0, 2],
+    "difficulty": "beginner",
+    "tab": "e|--0--|\nB|--0--|\nG|--1--|\nD|--2--|\nA|--2--|\nE|--0--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": 0, "finger": 0, "role": "root"},
+        {"string": 4, "fret": 2, "finger": 2, "role": "note"},
+        {"string": 3, "fret": 2, "finger": 3, "role": "note"},
+        {"string": 2, "fret": 1, "finger": 1, "role": "note"},
+        {"string": 1, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 0, "fret": 0, "finger": 0, "role": "root"}
+      ],
+      "position_marker": 0,
+      "barre": null
+    },
+    "formula": "1 3 5",
+    "tags": ["beginner", "open", "major", "CAGED"]
+  },
+  {
+    "id": "chord-a-minor-open-guitar-6-standard",
+    "type": "chord",
+    "name": "Am — Open",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "A",
+    "chord_type": "minor",
+    "position": "Open",
+    "fret_range": [0, 2],
+    "difficulty": "beginner",
+    "tab": "e|--0--|\nB|--1--|\nG|--2--|\nD|--2--|\nA|--0--|\nE|--x--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": -1, "finger": 0, "role": "muted"},
+        {"string": 4, "fret": 0, "finger": 0, "role": "root"},
+        {"string": 3, "fret": 2, "finger": 2, "role": "note"},
+        {"string": 2, "fret": 2, "finger": 3, "role": "note"},
+        {"string": 1, "fret": 1, "finger": 1, "role": "note"},
+        {"string": 0, "fret": 0, "finger": 0, "role": "note"}
+      ],
+      "position_marker": 0,
+      "barre": null
+    },
+    "formula": "1 b3 5",
+    "tags": ["beginner", "open", "minor", "CAGED"]
+  },
+  {
+    "id": "chord-e-minor-open-guitar-6-standard",
+    "type": "chord",
+    "name": "Em — Open",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "E",
+    "chord_type": "minor",
+    "position": "Open",
+    "fret_range": [0, 2],
+    "difficulty": "beginner",
+    "tab": "e|--0--|\nB|--0--|\nG|--0--|\nD|--2--|\nA|--2--|\nE|--0--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": 0, "finger": 0, "role": "root"},
+        {"string": 4, "fret": 2, "finger": 2, "role": "note"},
+        {"string": 3, "fret": 2, "finger": 3, "role": "note"},
+        {"string": 2, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 1, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 0, "fret": 0, "finger": 0, "role": "root"}
+      ],
+      "position_marker": 0,
+      "barre": null
+    },
+    "formula": "1 b3 5",
+    "tags": ["beginner", "open", "minor", "CAGED"]
+  },
+  {
+    "id": "chord-d-minor-open-guitar-6-standard",
+    "type": "chord",
+    "name": "Dm — Open",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "D",
+    "chord_type": "minor",
+    "position": "Open",
+    "fret_range": [0, 3],
+    "difficulty": "beginner",
+    "tab": "e|--1--|\nB|--3--|\nG|--2--|\nD|--0--|\nA|--x--|\nE|--x--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": -1, "finger": 0, "role": "muted"},
+        {"string": 4, "fret": -1, "finger": 0, "role": "muted"},
+        {"string": 3, "fret": 0, "finger": 0, "role": "root"},
+        {"string": 2, "fret": 2, "finger": 2, "role": "note"},
+        {"string": 1, "fret": 3, "finger": 3, "role": "note"},
+        {"string": 0, "fret": 1, "finger": 1, "role": "note"}
+      ],
+      "position_marker": 0,
+      "barre": null
+    },
+    "formula": "1 b3 5",
+    "tags": ["beginner", "open", "minor", "CAGED"]
+  },
+  {
+    "id": "chord-c-maj7-open-guitar-6-standard",
+    "type": "chord",
+    "name": "Cmaj7 — Open",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "C",
+    "chord_type": "maj7",
+    "position": "Open",
+    "fret_range": [0, 3],
+    "difficulty": "intermediate",
+    "tab": "e|--0--|\nB|--0--|\nG|--0--|\nD|--2--|\nA|--3--|\nE|--x--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": -1, "finger": 0, "role": "muted"},
+        {"string": 4, "fret": 3, "finger": 3, "role": "root"},
+        {"string": 3, "fret": 2, "finger": 2, "role": "note"},
+        {"string": 2, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 1, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 0, "fret": 0, "finger": 0, "role": "note"}
+      ],
+      "position_marker": 0,
+      "barre": null
+    },
+    "formula": "1 3 5 7",
+    "tags": ["intermediate", "open", "maj7", "jazz"]
+  },
+  {
+    "id": "chord-g-dominant7-open-guitar-6-standard",
+    "type": "chord",
+    "name": "G7 — Open",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "G",
+    "chord_type": "dominant7",
+    "position": "Open",
+    "fret_range": [0, 3],
+    "difficulty": "intermediate",
+    "tab": "e|--1--|\nB|--0--|\nG|--0--|\nD|--0--|\nA|--2--|\nE|--3--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": 3, "finger": 3, "role": "root"},
+        {"string": 4, "fret": 2, "finger": 2, "role": "note"},
+        {"string": 3, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 2, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 1, "fret": 0, "finger": 0, "role": "note"},
+        {"string": 0, "fret": 1, "finger": 1, "role": "note"}
+      ],
+      "position_marker": 0,
+      "barre": null
+    },
+    "formula": "1 3 5 b7",
+    "tags": ["intermediate", "open", "dominant7", "blues", "jazz"]
+  },
+  {
+    "id": "chord-d-dominant7-open-guitar-6-standard",
+    "type": "chord",
+    "name": "D7 — Open",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "D",
+    "chord_type": "dominant7",
+    "position": "Open",
+    "fret_range": [0, 2],
+    "difficulty": "intermediate",
+    "tab": "e|--2--|\nB|--1--|\nG|--2--|\nD|--0--|\nA|--x--|\nE|--x--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": -1, "finger": 0, "role": "muted"},
+        {"string": 4, "fret": -1, "finger": 0, "role": "muted"},
+        {"string": 3, "fret": 0, "finger": 0, "role": "root"},
+        {"string": 2, "fret": 2, "finger": 2, "role": "note"},
+        {"string": 1, "fret": 1, "finger": 1, "role": "note"},
+        {"string": 0, "fret": 2, "finger": 3, "role": "note"}
+      ],
+      "position_marker": 0,
+      "barre": null
+    },
+    "formula": "1 3 5 b7",
+    "tags": ["intermediate", "open", "dominant7", "blues", "jazz"]
+  },
+  {
+    "id": "chord-b-minor-2nd-guitar-6-standard",
+    "type": "chord",
+    "name": "Bm — 2nd Position",
+    "instrument": "guitar",
+    "strings": 6,
+    "tuning": "standard",
+    "root": "B",
+    "chord_type": "minor",
+    "position": "2nd",
+    "fret_range": [2, 4],
+    "difficulty": "intermediate",
+    "tab": "e|--2--|\nB|--3--|\nG|--4--|\nD|--4--|\nA|--2--|\nE|--x--|",
+    "diagram": {
+      "type": "chord",
+      "tuning": ["E","A","D","G","B","e"],
+      "positions": [
+        {"string": 5, "fret": -1, "finger": 0, "role": "muted"},
+        {"string": 4, "fret": 2, "finger": 1, "role": "root"},
+        {"string": 3, "fret": 4, "finger": 3, "role": "note"},
+        {"string": 2, "fret": 4, "finger": 4, "role": "note"},
+        {"string": 1, "fret": 3, "finger": 2, "role": "note"},
+        {"string": 0, "fret": 2, "finger": 1, "role": "root"}
+      ],
+      "position_marker": 2,
+      "barre": {"fret": 2, "from_string": 0, "to_string": 4}
+    },
+    "formula": "1 b3 5",
+    "tags": ["intermediate", "barre", "minor", "CAGED"]
+  }
+]
