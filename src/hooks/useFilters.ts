@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
+import type { Filters, LibraryEntry } from '../types.ts'
 
-const DEFAULT_FILTERS = {
+const DEFAULT_FILTERS: Filters = {
   instrument: 'guitar',
   strings: '',
   tuning: '',
@@ -13,38 +14,44 @@ const DEFAULT_FILTERS = {
   style: '',
 }
 
-function readFiltersFromURL() {
+function readFiltersFromURL(): Filters {
   if (typeof window === 'undefined') return DEFAULT_FILTERS
   const params = new URLSearchParams(window.location.search)
   const filters = { ...DEFAULT_FILTERS }
-  Object.keys(DEFAULT_FILTERS).forEach((key) => {
+  ;(Object.keys(DEFAULT_FILTERS) as (keyof Filters)[]).forEach((key) => {
     const val = params.get(key)
     if (val !== null) filters[key] = val
   })
   return filters
 }
 
-function writeFiltersToURL(filters) {
+function writeFiltersToURL(filters: Filters): void {
   if (typeof window === 'undefined') return
   const params = new URLSearchParams()
-  Object.entries(filters).forEach(([key, val]) => {
+  ;(Object.entries(filters) as [keyof Filters, string][]).forEach(([key, val]) => {
     if (val && val !== DEFAULT_FILTERS[key]) params.set(key, val)
   })
   const search = params.toString()
-  const newURL = search
-    ? `${window.location.pathname}?${search}`
-    : window.location.pathname
+  const newURL = search ? `${window.location.pathname}?${search}` : window.location.pathname
   window.history.replaceState(null, '', newURL)
 }
 
-export function useFilters(entries) {
-  const [filters, setFilters] = useState(readFiltersFromURL)
+interface UseFiltersReturn {
+  filters: Filters
+  setFilter: (key: keyof Filters, value: string) => void
+  clearFilters: () => void
+  filtered: LibraryEntry[]
+  activeFilterCount: number
+}
+
+export function useFilters(entries: LibraryEntry[]): UseFiltersReturn {
+  const [filters, setFilters] = useState<Filters>(readFiltersFromURL)
 
   useEffect(() => {
     writeFiltersToURL(filters)
   }, [filters])
 
-  const setFilter = useCallback((key, value) => {
+  const setFilter = useCallback((key: keyof Filters, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
   }, [])
 
@@ -53,8 +60,8 @@ export function useFilters(entries) {
   }, [])
 
   const activeFilterCount = useMemo(() => {
-    return Object.entries(filters).filter(
-      ([key, val]) => val && val !== DEFAULT_FILTERS[key]
+    return (Object.entries(filters) as [keyof Filters, string][]).filter(
+      ([key, val]) => val && val !== DEFAULT_FILTERS[key],
     ).length
   }, [filters])
 

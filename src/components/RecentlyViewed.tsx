@@ -1,4 +1,6 @@
-const TYPE_COLORS = {
+import type { LibraryEntry, EntryType } from '../types.ts'
+
+const TYPE_COLORS: Record<EntryType, string> = {
   scale: '#1d4ed8',
   chord: '#15803d',
   arpeggio: '#7e22ce',
@@ -6,14 +8,16 @@ const TYPE_COLORS = {
   lick: '#b91c1c',
 }
 
-export default function RecentlyViewed({ entries, onSelect }) {
+interface RecentlyViewedProps {
+  entries: LibraryEntry[]
+  onSelect: (entry: LibraryEntry) => void
+}
+
+export default function RecentlyViewed({ entries, onSelect }: RecentlyViewedProps) {
   if (!entries || entries.length === 0) return null
 
   return (
-    <div
-      className="border-t py-3"
-      style={{ borderColor: 'var(--color-border)' }}
-    >
+    <div className="border-t py-3" style={{ borderColor: 'var(--color-border)' }}>
       <div className="px-4 mb-2">
         <span className="text-xs font-medium" style={{ color: 'var(--color-muted)' }}>
           RECENTLY VIEWED

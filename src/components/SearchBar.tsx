@@ -1,10 +1,15 @@
 import { useRef } from 'react'
 import { Search, X } from 'lucide-react'
 
-export default function SearchBar({ onSearch, query }) {
-  const inputRef = useRef(null)
+interface SearchBarProps {
+  onSearch: (query: string) => void
+  query: string
+}
 
-  function handleChange(e) {
+export default function SearchBar({ onSearch, query }: SearchBarProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     onSearch(e.target.value)
   }
 

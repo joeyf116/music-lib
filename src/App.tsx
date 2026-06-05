@@ -1,36 +1,36 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { SlidersHorizontal, X } from 'lucide-react'
-import Header from './components/Header.jsx'
-import SearchBar from './components/SearchBar.jsx'
-import FilterPanel from './components/FilterPanel.jsx'
-import ResultsGrid from './components/ResultsGrid.jsx'
-import DetailView from './components/DetailView.jsx'
-import RecentlyViewed from './components/RecentlyViewed.jsx'
-import { useFilters } from './hooks/useFilters.js'
-import { useSearch } from './hooks/useSearch.js'
+import type { LibraryEntry } from './types.ts'
+import Header from './components/Header.tsx'
+import SearchBar from './components/SearchBar.tsx'
+import FilterPanel from './components/FilterPanel.tsx'
+import ResultsGrid from './components/ResultsGrid.tsx'
+import DetailView from './components/DetailView.tsx'
+import RecentlyViewed from './components/RecentlyViewed.tsx'
+import { useFilters } from './hooks/useFilters.ts'
+import { useSearch } from './hooks/useSearch.ts'
 
 const DATA_FILES = [
-  { url: '/music-lib/data/scales/guitar-standard.json' },
-  { url: '/music-lib/data/chords/guitar-standard.json' },
-  { url: '/music-lib/data/arpeggios/guitar-standard.json' },
-  { url: '/music-lib/data/etudes/guitar.json' },
-  { url: '/music-lib/data/licks/guitar.json' },
+  '/music-lib/data/scales/guitar-standard.json',
+  '/music-lib/data/chords/guitar-standard.json',
+  '/music-lib/data/arpeggios/guitar-standard.json',
+  '/music-lib/data/etudes/guitar.json',
+  '/music-lib/data/licks/guitar.json',
 ]
 
-function getInitialTheme() {
+function getInitialTheme(): string {
   if (typeof window === 'undefined') return 'dark'
   return localStorage.getItem('guitarref-theme') ?? 'dark'
 }
 
 export default function App() {
-  const [theme, setTheme] = useState(getInitialTheme)
-  const [allEntries, setAllEntries] = useState([])
+  const [theme, setTheme] = useState<string>(getInitialTheme)
+  const [allEntries, setAllEntries] = useState<LibraryEntry[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedEntry, setSelectedEntry] = useState(null)
-  const [recentlyViewed, setRecentlyViewed] = useState([])
+  const [selectedEntry, setSelectedEntry] = useState<LibraryEntry | null>(null)
+  const [recentlyViewed, setRecentlyViewed] = useState<LibraryEntry[]>([])
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false)
 
-  // Apply theme to html element
   useEffect(() => {
     const html = document.documentElement
     if (theme === 'light') {
@@ -41,18 +41,17 @@ export default function App() {
     localStorage.setItem('guitarref-theme', theme)
   }, [theme])
 
-  // Load all data files
   useEffect(() => {
     let cancelled = false
     async function loadData() {
       setLoading(true)
       try {
         const results = await Promise.all(
-          DATA_FILES.map((f) =>
-            fetch(f.url)
-              .then((r) => r.json())
-              .catch(() => [])
-          )
+          DATA_FILES.map((url) =>
+            fetch(url)
+              .then((r) => r.json() as Promise<LibraryEntry[]>)
+              .catch(() => [] as LibraryEntry[]),
+          ),
         )
         if (!cancelled) {
           setAllEntries(results.flat())
@@ -64,13 +63,14 @@ export default function App() {
       }
     }
     loadData()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const { filters, setFilter, clearFilters, filtered, activeFilterCount } = useFilters(allEntries)
   const { query, search, results: searchResults } = useSearch(filtered)
 
-  // Final result list: search over already-filtered entries
   const displayEntries = useMemo(() => {
     if (!query.trim()) return filtered
     return searchResults
@@ -80,11 +80,11 @@ export default function App() {
     setTheme((t) => (t === 'dark' ? 'light' : 'dark'))
   }, [])
 
-  const handleSelect = useCallback((entry) => {
+  const handleSelect = useCallback((entry: LibraryEntry) => {
     setSelectedEntry(entry)
     setRecentlyViewed((prev) => {
-      const filtered = prev.filter((e) => e.id !== entry.id)
-      return [entry, ...filtered].slice(0, 10)
+      const without = prev.filter((e) => e.id !== entry.id)
+      return [entry, ...without].slice(0, 10)
     })
   }, [])
 
@@ -93,17 +93,11 @@ export default function App() {
   }, [])
 
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{ backgroundColor: 'var(--color-bg)' }}
-    >
-      {/* Header */}
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--color-bg)' }}>
       <Header theme={theme} onToggleTheme={toggleTheme} />
 
-      {/* Recently Viewed */}
       <RecentlyViewed entries={recentlyViewed} onSelect={handleSelect} />
 
-      {/* Main layout */}
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop Sidebar */}
         <aside
@@ -162,7 +156,6 @@ export default function App() {
 
         {/* Main content */}
         <main className="flex-1 flex flex-col overflow-hidden">
-          {/* Search + filter bar */}
           <div
             className="flex-shrink-0 flex items-center gap-3 px-4 py-3 border-b"
             style={{
@@ -170,7 +163,6 @@ export default function App() {
               borderColor: 'var(--color-border)',
             }}
           >
-            {/* Mobile filter toggle */}
             <button
               onClick={() => setFilterDrawerOpen(true)}
               className="lg:hidden flex items-center justify-center p-2 rounded-lg border relative"
@@ -199,18 +191,12 @@ export default function App() {
             </div>
           </div>
 
-          {/* Results */}
           <div className="flex-1 overflow-y-auto p-4">
-            <ResultsGrid
-              entries={displayEntries}
-              onSelect={handleSelect}
-              loading={loading}
-            />
+            <ResultsGrid entries={displayEntries} onSelect={handleSelect} loading={loading} />
           </div>
         </main>
       </div>
 
-      {/* Detail View */}
       {selectedEntry && (
         <DetailView
           entry={selectedEntry}

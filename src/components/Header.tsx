@@ -1,6 +1,11 @@
 import { Sun, Moon, Music } from 'lucide-react'
 
-export default function Header({ theme, onToggleTheme }) {
+interface HeaderProps {
+  theme: string
+  onToggleTheme: () => void
+}
+
+export default function Header({ theme, onToggleTheme }: HeaderProps) {
   return (
     <header
       className="flex items-center justify-between px-4 py-3 border-b"
@@ -17,10 +22,7 @@ export default function Header({ theme, onToggleTheme }) {
           <Music size={20} color="#fff" />
         </div>
         <div>
-          <h1
-            className="text-xl font-bold leading-none"
-            style={{ color: 'var(--color-text)' }}
-          >
+          <h1 className="text-xl font-bold leading-none" style={{ color: 'var(--color-text)' }}>
             GuitarRef
           </h1>
           <p className="text-xs leading-tight" style={{ color: 'var(--color-muted)' }}>

@@ -1,7 +1,8 @@
 import { useState, useMemo, useCallback, useRef } from 'react'
-import Fuse from 'fuse.js'
+import Fuse, { type IFuseOptions } from 'fuse.js'
+import type { LibraryEntry } from '../types.ts'
 
-const FUSE_OPTIONS = {
+const FUSE_OPTIONS: IFuseOptions<LibraryEntry> = {
   keys: [
     { name: 'name', weight: 0.4 },
     { name: 'root', weight: 0.2 },
@@ -17,16 +18,22 @@ const FUSE_OPTIONS = {
   minMatchCharLength: 2,
 }
 
-export function useSearch(allEntries) {
+interface UseSearchReturn {
+  query: string
+  search: (query: string) => void
+  results: LibraryEntry[]
+}
+
+export function useSearch(allEntries: LibraryEntry[]): UseSearchReturn {
   const [query, setQuery] = useState('')
-  const debounceTimer = useRef(null)
+  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const fuse = useMemo(() => {
     if (!allEntries || allEntries.length === 0) return null
     return new Fuse(allEntries, FUSE_OPTIONS)
   }, [allEntries])
 
-  const search = useCallback((rawQuery) => {
+  const search = useCallback((rawQuery: string) => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current)
     debounceTimer.current = setTimeout(() => {
       setQuery(rawQuery)

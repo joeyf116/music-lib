@@ -1,4 +1,4 @@
-// FingeringDiagram renders an SVG chord box or scale/arpeggio fretboard segment
+import type { Diagram, DiagramPosition } from '../types.ts'
 
 const STRING_COUNT = 6
 const CHORD_FRET_ROWS = 4
@@ -8,14 +8,17 @@ const LEFT_MARGIN = 28
 const TOP_MARGIN = 32
 const DOT_R = 12
 
-function ChordDiagram({ diagram }) {
+interface ChordDiagramProps {
+  diagram: Diagram
+}
+
+function ChordDiagram({ diagram }: ChordDiagramProps) {
   const { positions = [], barre, position_marker, tuning } = diagram
   const isOpen = position_marker === 0
 
   const svgWidth = LEFT_MARGIN + (STRING_COUNT - 1) * CELL_W + LEFT_MARGIN
   const svgHeight = TOP_MARGIN + CHORD_FRET_ROWS * CELL_H + 20
 
-  // Determine the fret range to display
   const frettedPositions = positions.filter((p) => p.fret > 0)
   const minFret = frettedPositions.length > 0 ? Math.min(...frettedPositions.map((p) => p.fret)) : 1
   const startFret = isOpen ? 1 : minFret
@@ -27,7 +30,6 @@ function ChordDiagram({ diagram }) {
       viewBox={`0 0 ${svgWidth} ${svgHeight}`}
       aria-label="Chord diagram"
     >
-      {/* Position marker (fret number) */}
       {!isOpen && (
         <text
           x={LEFT_MARGIN - 6}
@@ -40,7 +42,6 @@ function ChordDiagram({ diagram }) {
         </text>
       )}
 
-      {/* Nut (thick line) */}
       {isOpen && (
         <rect
           x={LEFT_MARGIN}
@@ -52,7 +53,6 @@ function ChordDiagram({ diagram }) {
         />
       )}
 
-      {/* Fret lines */}
       {Array.from({ length: CHORD_FRET_ROWS + 1 }).map((_, i) => (
         <line
           key={i}
@@ -65,7 +65,6 @@ function ChordDiagram({ diagram }) {
         />
       ))}
 
-      {/* String lines */}
       {Array.from({ length: STRING_COUNT }).map((_, s) => (
         <line
           key={s}
@@ -78,7 +77,6 @@ function ChordDiagram({ diagram }) {
         />
       ))}
 
-      {/* Barre */}
       {barre && (
         <rect
           x={LEFT_MARGIN + (STRING_COUNT - 1 - barre.to_string) * CELL_W - DOT_R}
@@ -91,11 +89,9 @@ function ChordDiagram({ diagram }) {
         />
       )}
 
-      {/* Finger dots */}
-      {positions.map((pos, idx) => {
+      {positions.map((pos: DiagramPosition, idx: number) => {
         const sx = LEFT_MARGIN + (STRING_COUNT - 1 - pos.string) * CELL_W
         if (pos.fret === -1) {
-          // Muted
           return (
             <text
               key={idx}
@@ -110,7 +106,6 @@ function ChordDiagram({ diagram }) {
           )
         }
         if (pos.fret === 0) {
-          // Open string
           return (
             <circle
               key={idx}
@@ -144,7 +139,6 @@ function ChordDiagram({ diagram }) {
         )
       })}
 
-      {/* String labels at bottom */}
       {tuning &&
         tuning.map((note, i) => (
           <text
@@ -162,8 +156,12 @@ function ChordDiagram({ diagram }) {
   )
 }
 
-function ScaleDiagram({ diagram }) {
-  const { positions = [], position_marker, tuning } = diagram
+interface ScaleDiagramProps {
+  diagram: Diagram
+}
+
+function ScaleDiagram({ diagram }: ScaleDiagramProps) {
+  const { positions = [], tuning } = diagram
 
   if (!positions.length) return null
 
@@ -188,7 +186,6 @@ function ScaleDiagram({ diagram }) {
       viewBox={`0 0 ${svgWidth} ${svgHeight}`}
       aria-label="Scale diagram"
     >
-      {/* Fret number labels */}
       {Array.from({ length: numFrets + 1 }).map((_, f) => {
         const fretNum = minFret + f
         return (
@@ -205,7 +202,6 @@ function ScaleDiagram({ diagram }) {
         )
       })}
 
-      {/* Nut line if open position */}
       {minFret === 0 && (
         <rect
           x={SCALE_LEFT - 3}
@@ -217,7 +213,6 @@ function ScaleDiagram({ diagram }) {
         />
       )}
 
-      {/* Fret lines (vertical) */}
       {Array.from({ length: numFrets + 1 }).map((_, f) => (
         <line
           key={f}
@@ -230,7 +225,6 @@ function ScaleDiagram({ diagram }) {
         />
       ))}
 
-      {/* String lines (horizontal) */}
       {Array.from({ length: STRING_COUNT }).map((_, s) => (
         <line
           key={s}
@@ -243,19 +237,14 @@ function ScaleDiagram({ diagram }) {
         />
       ))}
 
-      {/* Notes */}
-      {positions.map((pos, idx) => {
-        const fx = SCALE_LEFT + (pos.fret - minFret) * SCALE_CELL_W - (pos.fret === 0 ? 0 : SCALE_CELL_W / 2)
+      {positions.map((pos: DiagramPosition, idx: number) => {
+        const cx =
+          pos.fret === 0
+            ? SCALE_LEFT - SCALE_CELL_W * 0.3
+            : SCALE_LEFT + (pos.fret - minFret) * SCALE_CELL_W - SCALE_CELL_W / 2
         const sy = SCALE_TOP + (STRING_COUNT - 1 - pos.string) * SCALE_CELL_H
-
-        // For open strings (fret 0), place dot on the nut/before first fret
-        const cx = pos.fret === 0
-          ? SCALE_LEFT - SCALE_CELL_W * 0.3
-          : SCALE_LEFT + (pos.fret - minFret) * SCALE_CELL_W - SCALE_CELL_W / 2
-
         const fill = pos.role === 'root' ? 'var(--color-accent)' : 'var(--color-text)'
         const textFill = pos.role === 'root' ? '#fff' : 'var(--color-bg)'
-
         return (
           <g key={idx}>
             <circle cx={cx} cy={sy} r={10} fill={fill} />
@@ -275,7 +264,6 @@ function ScaleDiagram({ diagram }) {
         )
       })}
 
-      {/* String labels */}
       {tuning &&
         [...tuning].reverse().map((note, i) => (
           <text
@@ -293,14 +281,15 @@ function ScaleDiagram({ diagram }) {
   )
 }
 
-export default function FingeringDiagram({ diagram }) {
+interface FingeringDiagramProps {
+  diagram: Diagram
+}
+
+export default function FingeringDiagram({ diagram }: FingeringDiagramProps) {
   if (!diagram) return null
 
   return (
-    <div
-      className="rounded-lg p-4 overflow-x-auto"
-      style={{ backgroundColor: 'var(--color-bg)' }}
-    >
+    <div className="rounded-lg p-4 overflow-x-auto" style={{ backgroundColor: 'var(--color-bg)' }}>
       {diagram.type === 'chord' ? (
         <ChordDiagram diagram={diagram} />
       ) : (
