@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { useChordData } from '@/hooks/useChordData'
+import { useChordLibrary } from '@/hooks/useChordLibrary'
 import { useApp } from '@/contexts/AppContext'
 import ChordBox from '@/components/diagrams/ChordBox'
 import type { NoteName, ChordQuality } from '@/types'
@@ -16,15 +16,12 @@ const QUALITIES: { value: ChordQuality; label: string }[] = [
 ]
 
 export default function ChordsClient() {
-  const { entries, loading } = useChordData()
+  const { filter, loading } = useChordLibrary()
   const { prefs, trackViewed } = useApp()
   const [root, setRoot] = useState<NoteName>('C')
   const [quality, setQuality] = useState<ChordQuality>('major')
 
-  const voicings = useMemo(
-    () => entries.filter((e) => e.type === 'chord' && e.root?.toUpperCase() === root.toUpperCase() && e.chord_type === quality),
-    [entries, root, quality],
-  )
+  const voicings = useMemo(() => filter(root, quality), [filter, root, quality])
 
   return (
     <div className="max-w-3xl mx-auto px-5 py-6">

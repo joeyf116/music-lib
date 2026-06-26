@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { ArrowLeft, Edit2, ExternalLink, Play, Music } from 'lucide-react'
 import { db } from '@/lib/db'
 import { songs } from '@/lib/db/schema'
-import { findVoicings } from '@/lib/music/chords'
 import ChordDetailSection from '@/components/songs/ChordDetailSection'
 import DeleteSongButton from '@/components/songs/DeleteSongButton'
 

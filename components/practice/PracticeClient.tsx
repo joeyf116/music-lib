@@ -4,10 +4,9 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, ExternalLink, Play, Pause, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useChordData } from '@/hooks/useChordData'
+import { useChordLibrary } from '@/hooks/useChordLibrary'
 import { useApp } from '@/contexts/AppContext'
 import ChordBox from '@/components/diagrams/ChordBox'
-import { findVoicings } from '@/lib/music/chords'
 import type { Song } from '@/lib/db/schema'
 
 function formatTime(s: number) {
@@ -46,12 +45,12 @@ interface Props { song: Song }
 
 export default function PracticeClient({ song }: Props) {
   const router = useRouter()
-  const { entries } = useChordData()
+  const { lookup } = useChordLibrary()
   const { prefs } = useApp()
   const [chordIdx, setChordIdx] = useState(0)
   const chords = song.chordProgression as string[]
   const currentChord = chords[chordIdx]
-  const voicings = useMemo(() => (currentChord ? findVoicings(currentChord, entries) : []), [currentChord, entries])
+  const voicings = useMemo(() => (currentChord ? lookup(currentChord) : []), [currentChord, lookup])
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg)' }}>
