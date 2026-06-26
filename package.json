@@ -10,7 +10,8 @@
     "lint": "next lint",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "tsx scripts/seed-library.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -35,6 +36,7 @@
     "globals": "^17.6.0",
     "lucide-react": "^1.17.0",
     "tailwindcss": "^4.3.0",
+    "tsx": "^4.22.4",
     "typescript": "^6.0.3"
   }
 }

@@ -1,4 +1,4 @@
-import { pgTable, text, jsonb, timestamp } from 'drizzle-orm/pg-core'
+import { pgTable, text, jsonb, timestamp, integer } from 'drizzle-orm/pg-core'
 
 export const songs = pgTable('songs', {
   id: text('id').primaryKey(),
@@ -30,6 +30,28 @@ export const playlists = pgTable('playlists', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 })
+
+export const libraryEntries = pgTable('library_entries', {
+  id: text('id').primaryKey(),
+  type: text('type').notNull(),           // chord | scale | arpeggio | etude | lick
+  name: text('name').notNull(),
+  instrument: text('instrument').notNull(),
+  strings: integer('strings').notNull(),
+  tuning: text('tuning').notNull(),
+  root: text('root'),
+  scaleType: text('scale_type'),
+  chordType: text('chord_type'),
+  position: text('position'),
+  fretRange: jsonb('fret_range').$type<[number, number]>(),
+  difficulty: text('difficulty'),
+  tab: text('tab'),
+  diagram: jsonb('diagram').$type<import('@/types').Diagram>(),
+  formula: text('formula'),
+  tags: jsonb('tags').$type<string[]>().notNull().default([]),
+})
+
+export type LibraryEntryRow = typeof libraryEntries.$inferSelect
+export type NewLibraryEntryRow = typeof libraryEntries.$inferInsert
 
 export type Song = typeof songs.$inferSelect
 export type NewSong = typeof songs.$inferInsert
