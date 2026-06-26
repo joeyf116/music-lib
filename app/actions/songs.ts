@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { songs } from '@/lib/db/schema'
+import { parseProgression } from '@/lib/music/chords'
 
 function newId() {
   return `song-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
@@ -12,11 +13,7 @@ function newId() {
 
 export async function createSong(formData: FormData) {
   const id = newId()
-  const progressionRaw = formData.get('chordProgression') as string
-  const chordProgression = progressionRaw
-    .split(/[-–—,|]+/)
-    .map((s) => s.trim())
-    .filter(Boolean)
+  const chordProgression = parseProgression(formData.get('chordProgression') as string)
   const tagsRaw = formData.get('tags') as string
   const tags = tagsRaw ? tagsRaw.split(',').map((t) => t.trim()).filter(Boolean) : []
 
@@ -43,11 +40,7 @@ export async function createSong(formData: FormData) {
 }
 
 export async function updateSong(id: string, formData: FormData) {
-  const progressionRaw = formData.get('chordProgression') as string
-  const chordProgression = progressionRaw
-    .split(/[-–—,|]+/)
-    .map((s) => s.trim())
-    .filter(Boolean)
+  const chordProgression = parseProgression(formData.get('chordProgression') as string)
   const tagsRaw = formData.get('tags') as string
   const tags = tagsRaw ? tagsRaw.split(',').map((t) => t.trim()).filter(Boolean) : []
 

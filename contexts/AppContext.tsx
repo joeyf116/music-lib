@@ -5,7 +5,6 @@ import type { LibraryEntry, AppPreferences } from '@/types'
 
 const KEYS = {
   recentlyViewed: 'pa:recently-viewed',
-  favorites: 'pa:favorites',
   prefs: 'pa:prefs',
 } as const
 
@@ -27,9 +26,6 @@ const DEFAULT_PREFS: AppPreferences = { leftHanded: false, theme: 'dark' }
 interface AppContextValue {
   recentlyViewed: LibraryEntry[]
   trackViewed: (entry: LibraryEntry) => void
-  favorites: string[]
-  toggleFavorite: (id: string) => void
-  isFavorite: (id: string) => boolean
   prefs: AppPreferences
   updatePrefs: (patch: Partial<AppPreferences>) => void
 }
@@ -38,13 +34,10 @@ const AppContext = createContext<AppContextValue | null>(null)
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [recentlyViewed, setRecentlyViewed] = useState<LibraryEntry[]>([])
-  const [favorites, setFavorites] = useState<string[]>([])
   const [prefs, setPrefs] = useState<AppPreferences>(DEFAULT_PREFS)
 
-  // Hydrate from localStorage on mount
   useEffect(() => {
     setRecentlyViewed(storageGet<LibraryEntry[]>(KEYS.recentlyViewed, []))
-    setFavorites(storageGet<string[]>(KEYS.favorites, []))
     setPrefs(storageGet<AppPreferences>(KEYS.prefs, DEFAULT_PREFS))
   }, [])
 
@@ -62,16 +55,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
-  const toggleFavorite = useCallback((id: string) => {
-    setFavorites((prev) => {
-      const next = prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
-      storageSet(KEYS.favorites, next)
-      return next
-    })
-  }, [])
-
-  const isFavorite = useCallback((id: string) => favorites.includes(id), [favorites])
-
   const updatePrefs = useCallback((patch: Partial<AppPreferences>) => {
     setPrefs((prev) => {
       const next = { ...prev, ...patch }
@@ -81,7 +64,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <AppContext.Provider value={{ recentlyViewed, trackViewed, favorites, toggleFavorite, isFavorite, prefs, updatePrefs }}>
+    <AppContext.Provider value={{ recentlyViewed, trackViewed, prefs, updatePrefs }}>
       {children}
     </AppContext.Provider>
   )
