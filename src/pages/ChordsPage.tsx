@@ -34,24 +34,15 @@ export default function ChordsPage() {
   )
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text)' }}>Chords</h1>
+    <div className="max-w-3xl mx-auto px-5 py-6">
+      <h1 className="page-title mb-5">Chords</h1>
 
       {/* Root selector */}
-      <div className="mb-4">
-        <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--color-muted)' }}>Root</p>
-        <div className="flex flex-wrap gap-2">
+      <div className="mb-5">
+        <p className="section-label mb-2">Root</p>
+        <div className="pill-group">
           {NOTES.map((n) => (
-            <button
-              key={n}
-              onClick={() => setRoot(n)}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors min-w-[2.5rem]"
-              style={{
-                backgroundColor: root === n ? 'var(--color-accent)' : 'var(--color-surface)',
-                color: root === n ? '#fff' : 'var(--color-text)',
-                borderColor: root === n ? 'var(--color-accent)' : 'var(--color-border)',
-              }}
-            >
+            <button key={n} onClick={() => setRoot(n)} className={`pill ${root === n ? 'active' : ''}`}>
               {n}
             </button>
           ))}
@@ -59,52 +50,54 @@ export default function ChordsPage() {
       </div>
 
       {/* Quality selector */}
-      <div className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--color-muted)' }}>Quality</p>
-        <div className="flex flex-wrap gap-2">
+      <div className="mb-7">
+        <p className="section-label mb-2">Quality</p>
+        <div className="pill-group">
           {QUALITIES.map(({ value, label }) => (
-            <button
-              key={value}
-              onClick={() => setQuality(value)}
-              className="px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors"
-              style={{
-                backgroundColor: quality === value ? 'var(--color-accent)' : 'var(--color-surface)',
-                color: quality === value ? '#fff' : 'var(--color-text)',
-                borderColor: quality === value ? 'var(--color-accent)' : 'var(--color-border)',
-              }}
-            >
+            <button key={value} onClick={() => setQuality(value)} className={`pill ${quality === value ? 'active' : ''}`}>
               {label}
             </button>
           ))}
         </div>
       </div>
 
-      {loading && <p style={{ color: 'var(--color-muted)' }}>Loading…</p>}
+      {/* Chord name */}
+      <div className="flex items-baseline gap-2 mb-4">
+        <span style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text)' }}>
+          {root} {quality === 'major' ? '' : quality}
+        </span>
+        <span style={{ fontSize: 13, color: 'var(--color-muted)' }}>
+          {voicings.length} {voicings.length === 1 ? 'voicing' : 'voicings'}
+        </span>
+      </div>
+
+      {loading && (
+        <p style={{ fontSize: 13, color: 'var(--color-muted)' }}>Loading…</p>
+      )}
 
       {!loading && voicings.length === 0 && (
-        <div className="rounded-xl border p-8 text-center" style={{ borderColor: 'var(--color-border)' }}>
-          <p className="font-medium mb-1" style={{ color: 'var(--color-text)' }}>No voicings found for {root} {quality}</p>
-          <p className="text-sm" style={{ color: 'var(--color-muted)' }}>Try a different root or quality.</p>
+        <div className="card p-8 text-center">
+          <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--color-text)', marginBottom: 4 }}>
+            No voicings for {root} {quality}
+          </p>
+          <p style={{ fontSize: 13, color: 'var(--color-muted)' }}>Try a different root or quality.</p>
         </div>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {voicings.map((entry) => (
-          <div
+          <button
             key={entry.id}
-            className="rounded-xl border p-3 cursor-pointer hover:border-orange-500 transition-colors"
-            style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}
+            className="card card-hover p-3 text-left"
             onClick={() => trackViewed(entry)}
           >
-            <p className="text-xs font-medium mb-2 truncate" style={{ color: 'var(--color-muted)' }}>
-              {entry.position ?? entry.name}
-            </p>
+            <p className="section-label mb-2">{entry.position ?? entry.name}</p>
             {entry.diagram && (
               <div className="overflow-x-auto">
                 <ChordBox diagram={entry.diagram} leftHanded={prefs.leftHanded} />
               </div>
             )}
-          </div>
+          </button>
         ))}
       </div>
     </div>

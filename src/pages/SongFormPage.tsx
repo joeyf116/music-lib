@@ -40,37 +40,22 @@ export default function SongFormPage() {
     if (!songId) return
     const song = getSongs().find((s) => s.id === songId)
     if (!song) return
-    setTitle(song.title)
-    setArtist(song.artist)
-    setKey(song.key ?? '')
-    setCapo(song.capo ?? '')
-    setTuning(song.tuning ?? '')
-    setDifficulty(song.difficulty)
-    setInstrumentFocus(song.instrumentFocus)
-    setSpotifyUrl(song.spotifyUrl ?? '')
-    setTabUrl(song.tabUrl ?? '')
-    setYoutubeUrl(song.youtubeUrl ?? '')
-    setProgressionRaw(song.chordProgression.join(' - '))
-    setNotes(song.notes ?? '')
-    setTagsRaw(song.tags.join(', '))
-    setStatus(song.practiceStatus)
+    setTitle(song.title); setArtist(song.artist); setKey(song.key ?? '')
+    setCapo(song.capo ?? ''); setTuning(song.tuning ?? ''); setDifficulty(song.difficulty)
+    setInstrumentFocus(song.instrumentFocus); setSpotifyUrl(song.spotifyUrl ?? '')
+    setTabUrl(song.tabUrl ?? ''); setYoutubeUrl(song.youtubeUrl ?? '')
+    setProgressionRaw(song.chordProgression.join(' - ')); setNotes(song.notes ?? '')
+    setTagsRaw(song.tags.join(', ')); setStatus(song.practiceStatus)
   }, [songId])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const now = new Date().toISOString()
     const song: Song = {
-      id: songId ?? newId(),
-      title,
-      artist,
-      key: key || undefined,
-      capo: capo || undefined,
-      tuning: tuning || undefined,
-      difficulty,
-      instrumentFocus,
-      spotifyUrl: spotifyUrl || undefined,
-      tabUrl: tabUrl || undefined,
-      youtubeUrl: youtubeUrl || undefined,
+      id: songId ?? newId(), title, artist,
+      key: key || undefined, capo: capo || undefined, tuning: tuning || undefined,
+      difficulty, instrumentFocus,
+      spotifyUrl: spotifyUrl || undefined, tabUrl: tabUrl || undefined, youtubeUrl: youtubeUrl || undefined,
       chordProgression: parseProgression(progressionRaw),
       notes: notes || undefined,
       tags: tagsRaw.split(',').map((t) => t.trim()).filter(Boolean),
@@ -82,128 +67,93 @@ export default function SongFormPage() {
     navigate(`/songs/${song.id}`)
   }
 
-  const inputClass = 'w-full px-3 py-2.5 rounded-lg border text-sm'
-  const inputStyle = {
-    backgroundColor: 'var(--color-surface)',
-    borderColor: 'var(--color-border)',
-    color: 'var(--color-text)',
-  }
-  const labelClass = 'block text-xs font-semibold uppercase tracking-wider mb-1'
-  const labelStyle = { color: 'var(--color-muted)' }
+  const Field = ({ label, children }: { label: string; children: React.ReactNode }) => (
+    <div>
+      <label className="section-label block mb-1.5">{label}</label>
+      {children}
+    </div>
+  )
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      <button onClick={() => navigate(-1)} className="flex items-center gap-2 mb-6 text-sm" style={{ color: 'var(--color-muted)' }}>
-        <ArrowLeft size={16} /> Back
+    <div className="max-w-2xl mx-auto px-5 py-6">
+      <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 mb-5" style={{ color: 'var(--color-muted)', fontSize: 13 }}>
+        <ArrowLeft size={13} /> Back
       </button>
-      <h1 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text)' }}>
-        {isEdit ? 'Edit Song' : 'Add Song'}
-      </h1>
+      <h1 className="page-title mb-6">{isEdit ? 'Edit Song' : 'Add Song'}</h1>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className={labelClass} style={labelStyle}>Title *</label>
-            <input required className={inputClass} style={inputStyle} value={title} onChange={(e) => setTitle(e.target.value)} />
-          </div>
-          <div>
-            <label className={labelClass} style={labelStyle}>Artist *</label>
-            <input required className={inputClass} style={inputStyle} value={artist} onChange={(e) => setArtist(e.target.value)} />
-          </div>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Title *">
+            <input required className="input" value={title} onChange={(e) => setTitle(e.target.value)} />
+          </Field>
+          <Field label="Artist *">
+            <input required className="input" value={artist} onChange={(e) => setArtist(e.target.value)} />
+          </Field>
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
-          <div>
-            <label className={labelClass} style={labelStyle}>Key</label>
-            <input placeholder="e.g. C#m" className={inputClass} style={inputStyle} value={key} onChange={(e) => setKey(e.target.value)} />
-          </div>
-          <div>
-            <label className={labelClass} style={labelStyle}>Capo</label>
-            <input placeholder="e.g. 2" className={inputClass} style={inputStyle} value={capo} onChange={(e) => setCapo(e.target.value)} />
-          </div>
-          <div>
-            <label className={labelClass} style={labelStyle}>Tuning</label>
-            <input placeholder="Standard" className={inputClass} style={inputStyle} value={tuning} onChange={(e) => setTuning(e.target.value)} />
-          </div>
+        <div className="grid grid-cols-3 gap-3">
+          <Field label="Key">
+            <input placeholder="e.g. C#m" className="input" value={key} onChange={(e) => setKey(e.target.value)} />
+          </Field>
+          <Field label="Capo">
+            <input placeholder="e.g. 2" className="input" value={capo} onChange={(e) => setCapo(e.target.value)} />
+          </Field>
+          <Field label="Tuning">
+            <input placeholder="Standard" className="input" value={tuning} onChange={(e) => setTuning(e.target.value)} />
+          </Field>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className={labelClass} style={labelStyle}>Difficulty</label>
-            <select className={inputClass} style={inputStyle} value={difficulty ?? ''} onChange={(e) => setDifficulty((e.target.value || undefined) as Song['difficulty'])}>
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Difficulty">
+            <select className="input" value={difficulty ?? ''} onChange={(e) => setDifficulty((e.target.value || undefined) as Song['difficulty'])}>
               <option value="">—</option>
               <option value="beginner">Beginner</option>
               <option value="intermediate">Intermediate</option>
               <option value="advanced">Advanced</option>
             </select>
-          </div>
-          <div>
-            <label className={labelClass} style={labelStyle}>Instrument</label>
-            <select className={inputClass} style={inputStyle} value={instrumentFocus} onChange={(e) => setInstrumentFocus(e.target.value as Song['instrumentFocus'])}>
+          </Field>
+          <Field label="Instrument">
+            <select className="input" value={instrumentFocus} onChange={(e) => setInstrumentFocus(e.target.value as Song['instrumentFocus'])}>
               <option value="guitar">Guitar</option>
               <option value="bass">Bass</option>
               <option value="both">Both</option>
             </select>
-          </div>
+          </Field>
         </div>
 
-        <div>
-          <label className={labelClass} style={labelStyle}>Chord Progression</label>
-          <input
-            placeholder="e.g. G - F#m - C - D"
-            className={inputClass}
-            style={inputStyle}
-            value={progressionRaw}
-            onChange={(e) => setProgressionRaw(e.target.value)}
-          />
-          <p className="text-xs mt-1" style={{ color: 'var(--color-muted)' }}>Separate chords with spaces or dashes</p>
-        </div>
+        <Field label="Chord Progression">
+          <input placeholder="e.g. G - F#m - C - D" className="input" value={progressionRaw} onChange={(e) => setProgressionRaw(e.target.value)} />
+          <p style={{ fontSize: 11, color: 'var(--color-muted)', marginTop: 4 }}>Separate chords with spaces or dashes</p>
+        </Field>
 
-        <div>
-          <label className={labelClass} style={labelStyle}>Practice Status</label>
-          <select className={inputClass} style={inputStyle} value={status} onChange={(e) => setStatus(e.target.value as PracticeStatus)}>
-            {STATUS_OPTIONS.map(({ value, label }) => (
-              <option key={value} value={value}>{label}</option>
-            ))}
+        <Field label="Practice Status">
+          <select className="input" value={status} onChange={(e) => setStatus(e.target.value as PracticeStatus)}>
+            {STATUS_OPTIONS.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
           </select>
+        </Field>
+
+        <div className="card p-4 flex flex-col gap-3">
+          <p className="section-label">External Links</p>
+          <Field label="Spotify URL">
+            <input type="url" placeholder="https://open.spotify.com/…" className="input" value={spotifyUrl} onChange={(e) => setSpotifyUrl(e.target.value)} />
+          </Field>
+          <Field label="Tab / Notation URL">
+            <input type="url" placeholder="https://www.ultimate-guitar.com/…" className="input" value={tabUrl} onChange={(e) => setTabUrl(e.target.value)} />
+          </Field>
+          <Field label="YouTube URL">
+            <input type="url" placeholder="https://youtube.com/…" className="input" value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} />
+          </Field>
         </div>
 
-        <div>
-          <label className={labelClass} style={labelStyle}>Spotify URL</label>
-          <input type="url" placeholder="https://open.spotify.com/…" className={inputClass} style={inputStyle} value={spotifyUrl} onChange={(e) => setSpotifyUrl(e.target.value)} />
-        </div>
+        <Field label="Notes">
+          <textarea rows={3} className="input" value={notes} onChange={(e) => setNotes(e.target.value)} />
+        </Field>
 
-        <div>
-          <label className={labelClass} style={labelStyle}>Tab / Notation URL</label>
-          <input type="url" placeholder="https://www.ultimate-guitar.com/…" className={inputClass} style={inputStyle} value={tabUrl} onChange={(e) => setTabUrl(e.target.value)} />
-        </div>
+        <Field label="Tags">
+          <input placeholder="e.g. blues, acoustic, fingerpicking" className="input" value={tagsRaw} onChange={(e) => setTagsRaw(e.target.value)} />
+        </Field>
 
-        <div>
-          <label className={labelClass} style={labelStyle}>YouTube URL</label>
-          <input type="url" placeholder="https://youtube.com/…" className={inputClass} style={inputStyle} value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} />
-        </div>
-
-        <div>
-          <label className={labelClass} style={labelStyle}>Notes</label>
-          <textarea
-            rows={3}
-            className={inputClass}
-            style={inputStyle}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <label className={labelClass} style={labelStyle}>Tags</label>
-          <input placeholder="e.g. blues, acoustic, fingerpicking" className={inputClass} style={inputStyle} value={tagsRaw} onChange={(e) => setTagsRaw(e.target.value)} />
-        </div>
-
-        <button
-          type="submit"
-          className="px-6 py-3 rounded-lg font-semibold text-white mt-2"
-          style={{ backgroundColor: 'var(--color-accent)' }}
-        >
+        <button type="submit" className="btn-primary justify-center py-2.5 mt-1" style={{ fontSize: 14 }}>
           {isEdit ? 'Save Changes' : 'Add Song'}
         </button>
       </form>

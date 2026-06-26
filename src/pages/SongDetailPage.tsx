@@ -9,10 +9,10 @@ import { findVoicings } from '../lib/music/chords.ts'
 import type { PracticeStatus } from '../types.ts'
 
 const STATUS_LABELS: Record<PracticeStatus, string> = {
-  wantToLearn: 'Want to Learn',
+  wantToLearn: 'Want to learn',
   learning: 'Learning',
   comfortable: 'Comfortable',
-  performanceReady: 'Performance Ready',
+  performanceReady: 'Performance ready',
 }
 
 export default function SongDetailPage() {
@@ -32,9 +32,9 @@ export default function SongDetailPage() {
 
   if (!song) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-        <p style={{ color: 'var(--color-muted)' }}>Song not found.</p>
-        <Link to="/songs" className="text-sm mt-2 inline-block" style={{ color: 'var(--color-accent)' }}>← Back to Songs</Link>
+      <div className="max-w-2xl mx-auto px-5 py-16 text-center">
+        <p style={{ color: 'var(--color-muted)', fontSize: 13 }}>Song not found.</p>
+        <Link to="/songs" style={{ color: 'var(--color-accent)', fontSize: 13 }}>← Back to Songs</Link>
       </div>
     )
   }
@@ -46,119 +46,111 @@ export default function SongDetailPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      <div className="flex items-center justify-between mb-6">
-        <button onClick={() => navigate('/songs')} className="flex items-center gap-2 text-sm" style={{ color: 'var(--color-muted)' }}>
-          <ArrowLeft size={16} /> Songs
+    <div className="max-w-2xl mx-auto px-5 py-6">
+      {/* Top bar */}
+      <div className="flex items-center justify-between mb-5">
+        <button
+          onClick={() => navigate('/songs')}
+          className="flex items-center gap-1.5 text-sm"
+          style={{ color: 'var(--color-muted)', fontSize: 13 }}
+        >
+          <ArrowLeft size={13} /> Songs
         </button>
         <div className="flex items-center gap-2">
-          <Link
-            to={`/songs/${song.id}/edit`}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm"
-            style={{ color: 'var(--color-text)', borderColor: 'var(--color-border)', backgroundColor: 'var(--color-surface)' }}
-          >
-            <Edit2 size={14} /> Edit
+          <Link to={`/songs/${song.id}/edit`} className="btn-ghost">
+            <Edit2 size={12} /> Edit
           </Link>
-          <button
-            onClick={handleDelete}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm"
-            style={{ color: '#ef4444', borderColor: '#ef444433', backgroundColor: 'var(--color-surface)' }}
-          >
-            <Trash2 size={14} /> Delete
+          <button onClick={handleDelete} className="btn-danger">
+            <Trash2 size={12} /> Delete
           </button>
         </div>
       </div>
 
-      <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text)' }}>{song.title}</h1>
-      <p className="text-lg mb-4" style={{ color: 'var(--color-muted)' }}>{song.artist}</p>
+      {/* Title block */}
+      <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text)', marginBottom: 2, letterSpacing: '-0.3px' }}>
+        {song.title}
+      </h1>
+      <p style={{ fontSize: 15, color: 'var(--color-text-dim)', marginBottom: 12 }}>{song.artist}</p>
 
       {/* Meta chips */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {song.key && (
-          <span className="px-3 py-1 rounded-full text-sm border" style={{ color: 'var(--color-text)', borderColor: 'var(--color-border)' }}>
-            Key: {song.key}
-          </span>
-        )}
-        {song.capo && (
-          <span className="px-3 py-1 rounded-full text-sm border" style={{ color: 'var(--color-text)', borderColor: 'var(--color-border)' }}>
-            Capo {song.capo}
-          </span>
-        )}
-        {song.tuning && song.tuning !== 'Standard' && (
-          <span className="px-3 py-1 rounded-full text-sm border" style={{ color: 'var(--color-text)', borderColor: 'var(--color-border)' }}>
-            {song.tuning}
-          </span>
-        )}
-        <span className="px-3 py-1 rounded-full text-sm" style={{ backgroundColor: '#f9731622', color: '#f97316' }}>
-          {STATUS_LABELS[song.practiceStatus]}
-        </span>
+      <div className="flex flex-wrap gap-1.5 mb-5">
+        {song.key && <span className="chip">Key: {song.key}</span>}
+        {song.capo && <span className="chip">Capo {song.capo}</span>}
+        {song.tuning && song.tuning !== 'Standard' && <span className="chip">{song.tuning}</span>}
+        {song.difficulty && <span className="chip">{song.difficulty}</span>}
+        <span className={`chip status-${song.practiceStatus}`}>{STATUS_LABELS[song.practiceStatus]}</span>
       </div>
 
-      {/* External links */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      {/* Action row */}
+      <div className="flex flex-wrap gap-2 mb-7">
         {song.spotifyUrl && (
           <a href={song.spotifyUrl} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium"
-            style={{ backgroundColor: '#1DB954', color: '#fff' }}>
-            <ExternalLink size={14} /> Spotify
+            className="btn-primary" style={{ backgroundColor: '#1DB954' }}>
+            <ExternalLink size={12} /> Spotify
           </a>
         )}
         {song.tabUrl && (
-          <a href={song.tabUrl} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium border"
-            style={{ color: 'var(--color-text)', borderColor: 'var(--color-border)', backgroundColor: 'var(--color-surface)' }}>
-            <ExternalLink size={14} /> Tab
+          <a href={song.tabUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost">
+            <ExternalLink size={12} /> Tab
           </a>
         )}
         {song.youtubeUrl && (
           <a href={song.youtubeUrl} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium"
-            style={{ backgroundColor: '#FF0000', color: '#fff' }}>
-            <ExternalLink size={14} /> YouTube
+            className="btn-primary" style={{ backgroundColor: '#FF0000' }}>
+            <ExternalLink size={12} /> YouTube
           </a>
         )}
         {song.chordProgression.length > 0 && (
-          <Link
-            to={`/practice/song/${song.id}`}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium"
-            style={{ backgroundColor: 'var(--color-accent)', color: '#fff' }}>
-            <Play size={14} /> Practice Mode
+          <Link to={`/practice/song/${song.id}`} className="btn-primary">
+            <Play size={12} /> Practice Mode
           </Link>
         )}
       </div>
 
       {/* Chord progression */}
       {song.chordProgression.length > 0 && (
-        <section className="mb-8">
-          <h2 className="text-sm font-semibold uppercase tracking-wider mb-4" style={{ color: 'var(--color-muted)' }}>
-            Chord Progression
-          </h2>
-          <div className="flex flex-wrap gap-2 mb-6 p-4 rounded-xl border" style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-surface)' }}>
+        <section className="mb-7">
+          <p className="section-label mb-3">Chord Progression</p>
+
+          {/* Progression strip */}
+          <div
+            className="flex flex-wrap gap-1.5 p-3 rounded-lg mb-5"
+            style={{ backgroundColor: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}
+          >
             {song.chordProgression.map((chord, i) => (
-              <span key={i} className="px-3 py-1 rounded-lg text-sm font-medium" style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}>
+              <span
+                key={i}
+                className="px-2.5 py-1 rounded"
+                style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text)', backgroundColor: 'var(--color-surface)' }}
+              >
                 {chord}
               </span>
             ))}
           </div>
 
-          {loading && <p className="text-sm" style={{ color: 'var(--color-muted)' }}>Loading voicings…</p>}
+          {loading && <p style={{ fontSize: 12, color: 'var(--color-muted)' }}>Loading voicings…</p>}
 
           {!loading && song.chordProgression.map((chord) => {
             const voicings = chordVoicings[chord] ?? []
             return (
-              <div key={chord} className="mb-6">
-                <h3 className="font-semibold mb-3" style={{ color: 'var(--color-text)' }}>{chord}</h3>
+              <div key={chord} className="mb-5">
+                <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--color-text)', marginBottom: 10 }}>{chord}</p>
                 {voicings.length === 0 ? (
-                  <div className="rounded-lg border p-4 text-sm" style={{ borderColor: 'var(--color-border)', color: 'var(--color-muted)' }}>
-                    <Music size={16} className="inline mr-2" />
-                    No voicing found for {chord}.{' '}
-                    <Link to="/chords" style={{ color: 'var(--color-accent)' }}>Browse chords →</Link>
+                  <div
+                    className="rounded-lg p-3 flex items-center gap-2"
+                    style={{ backgroundColor: 'var(--color-surface-2)', border: '1px solid var(--color-border)' }}
+                  >
+                    <Music size={14} style={{ color: 'var(--color-muted)', flexShrink: 0 }} />
+                    <p style={{ fontSize: 12, color: 'var(--color-muted)' }}>
+                      No voicing for {chord}.{' '}
+                      <Link to="/chords" style={{ color: 'var(--color-accent)' }}>Browse chords →</Link>
+                    </p>
                   </div>
                 ) : (
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2">
                     {voicings.slice(0, 4).map((v) => (
-                      <div key={v.id} className="rounded-xl border p-3" style={{ backgroundColor: 'var(--color-surface)', borderColor: 'var(--color-border)' }}>
-                        <p className="text-xs mb-2" style={{ color: 'var(--color-muted)' }}>{v.position ?? v.name}</p>
+                      <div key={v.id} className="card p-3">
+                        <p className="section-label mb-2">{v.position ?? v.name}</p>
                         {v.diagram && <ChordBox diagram={v.diagram} leftHanded={prefs.leftHanded} />}
                       </div>
                     ))}
@@ -172,20 +164,16 @@ export default function SongDetailPage() {
 
       {/* Notes */}
       {song.notes && (
-        <section className="mb-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--color-muted)' }}>Notes</h2>
-          <p className="text-sm whitespace-pre-wrap" style={{ color: 'var(--color-text)' }}>{song.notes}</p>
+        <section className="mb-5">
+          <p className="section-label mb-2">Notes</p>
+          <p style={{ fontSize: 13, color: 'var(--color-text-dim)', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>{song.notes}</p>
         </section>
       )}
 
       {/* Tags */}
       {song.tags.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {song.tags.map((tag) => (
-            <span key={tag} className="px-2 py-0.5 rounded-full text-xs border" style={{ color: 'var(--color-muted)', borderColor: 'var(--color-border)' }}>
-              {tag}
-            </span>
-          ))}
+        <div className="flex flex-wrap gap-1.5">
+          {song.tags.map((tag) => <span key={tag} className="chip">{tag}</span>)}
         </div>
       )}
     </div>
