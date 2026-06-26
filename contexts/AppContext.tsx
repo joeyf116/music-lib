@@ -1,0 +1,94 @@
+'use client'
+
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
+import type { LibraryEntry, AppPreferences } from '@/types'
+
+const KEYS = {
+  recentlyViewed: 'pa:recently-viewed',
+  favorites: 'pa:favorites',
+  prefs: 'pa:prefs',
+} as const
+
+function storageGet<T>(key: string, fallback: T): T {
+  if (typeof window === 'undefined') return fallback
+  try {
+    const raw = localStorage.getItem(key)
+    return raw ? (JSON.parse(raw) as T) : fallback
+  } catch { return fallback }
+}
+
+function storageSet<T>(key: string, value: T) {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(key, JSON.stringify(value))
+}
+
+const DEFAULT_PREFS: AppPreferences = { leftHanded: false, theme: 'dark' }
+
+interface AppContextValue {
+  recentlyViewed: LibraryEntry[]
+  trackViewed: (entry: LibraryEntry) => void
+  favorites: string[]
+  toggleFavorite: (id: string) => void
+  isFavorite: (id: string) => boolean
+  prefs: AppPreferences
+  updatePrefs: (patch: Partial<AppPreferences>) => void
+}
+
+const AppContext = createContext<AppContextValue | null>(null)
+
+export function AppProvider({ children }: { children: ReactNode }) {
+  const [recentlyViewed, setRecentlyViewed] = useState<LibraryEntry[]>([])
+  const [favorites, setFavorites] = useState<string[]>([])
+  const [prefs, setPrefs] = useState<AppPreferences>(DEFAULT_PREFS)
+
+  // Hydrate from localStorage on mount
+  useEffect(() => {
+    setRecentlyViewed(storageGet<LibraryEntry[]>(KEYS.recentlyViewed, []))
+    setFavorites(storageGet<string[]>(KEYS.favorites, []))
+    setPrefs(storageGet<AppPreferences>(KEYS.prefs, DEFAULT_PREFS))
+  }, [])
+
+  useEffect(() => {
+    const html = document.documentElement
+    if (prefs.theme === 'light') html.classList.add('light')
+    else html.classList.remove('light')
+  }, [prefs.theme])
+
+  const trackViewed = useCallback((entry: LibraryEntry) => {
+    setRecentlyViewed((prev) => {
+      const next = [entry, ...prev.filter((e) => e.id !== entry.id)].slice(0, 10)
+      storageSet(KEYS.recentlyViewed, next)
+      return next
+    })
+  }, [])
+
+  const toggleFavorite = useCallback((id: string) => {
+    setFavorites((prev) => {
+      const next = prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+      storageSet(KEYS.favorites, next)
+      return next
+    })
+  }, [])
+
+  const isFavorite = useCallback((id: string) => favorites.includes(id), [favorites])
+
+  const updatePrefs = useCallback((patch: Partial<AppPreferences>) => {
+    setPrefs((prev) => {
+      const next = { ...prev, ...patch }
+      storageSet(KEYS.prefs, next)
+      return next
+    })
+  }, [])
+
+  return (
+    <AppContext.Provider value={{ recentlyViewed, trackViewed, favorites, toggleFavorite, isFavorite, prefs, updatePrefs }}>
+      {children}
+    </AppContext.Provider>
+  )
+}
+
+export function useApp() {
+  const ctx = useContext(AppContext)
+  if (!ctx) throw new Error('useApp must be used within AppProvider')
+  return ctx
+}
