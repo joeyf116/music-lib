@@ -1,17 +1,14 @@
 export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { Plus, ListMusic, ChevronRight } from 'lucide-react'
-import { db } from '@/lib/db'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { findAllPlaylists } from '@/lib/playlists/repository'
+import { findAllSongIds } from '@/lib/songs/repository'
 
 export default async function PlaylistsPage() {
-  const [playlists, songs] = await Promise.all([
-    db.query.playlists.findMany({ orderBy: (p, { desc }) => [desc(p.createdAt)] }),
-    db.query.songs.findMany({ columns: { id: true } }),
-  ])
-  const songIds = new Set(songs.map((s) => s.id))
+  const [playlists, songIds] = await Promise.all([findAllPlaylists(), findAllSongIds()])
 
   return (
     <div className="max-w-3xl mx-auto px-5 py-6">

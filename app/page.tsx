@@ -1,12 +1,9 @@
 export const dynamic = 'force-dynamic'
-import { db } from '@/lib/db'
 import HomeClient from '@/components/home/HomeClient'
+import { findAllSongs } from '@/lib/songs/repository'
+import { findAllPlaylists } from '@/lib/playlists/repository'
 
 export default async function HomePage() {
-  const [songs, playlists] = await Promise.all([
-    db.query.songs.findMany({ orderBy: (s, { desc }) => [desc(s.createdAt)] }),
-    db.query.playlists.findMany(),
-  ])
-
+  const [songs, playlists] = await Promise.all([findAllSongs(), findAllPlaylists()])
   return <HomeClient songs={songs} playlists={playlists} />
 }

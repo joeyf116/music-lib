@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { AppProvider } from '@/contexts/AppContext'
+import { LibraryProvider } from '@/contexts/LibraryContext'
 import AppSidebar from '@/components/layout/AppSidebar'
 import { ThemeProvider } from '@/components/theme-provider'
 import { TooltipProvider } from '@/components/ui/tooltip'
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <AppProvider>
+            <LibraryProvider>
             <TooltipProvider>
               <SidebarProvider>
                 <AppSidebar />
@@ -37,6 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </SidebarInset>
               </SidebarProvider>
             </TooltipProvider>
+            </LibraryProvider>
           </AppProvider>
         </ThemeProvider>
       </body>

@@ -1,24 +1,17 @@
 export const dynamic = 'force-dynamic'
 import { notFound } from 'next/navigation'
-import { eq } from 'drizzle-orm'
 import Link from 'next/link'
 import { ArrowLeft, Edit2, ExternalLink, Play } from 'lucide-react'
-import { db } from '@/lib/db'
-import { songs } from '@/lib/db/schema'
 import ChordDetailSection from '@/components/songs/ChordDetailSection'
 import DeleteSongButton from '@/components/songs/DeleteSongButton'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-
-const STATUS_LABELS = {
-  wantToLearn: 'Want to learn', learning: 'Learning',
-  comfortable: 'Comfortable', performanceReady: 'Performance ready',
-} as const
+import { findSongById, STATUS_LABELS } from '@/lib/songs/repository'
 
 export default async function SongDetailPage({ params }: { params: Promise<{ songId: string }> }) {
   const { songId } = await params
-  const song = await db.query.songs.findFirst({ where: eq(songs.id, songId) })
+  const song = await findSongById(songId)
   if (!song) notFound()
 
   return (

@@ -1,19 +1,14 @@
 export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { Plus, Music, ChevronRight } from 'lucide-react'
-import { db } from '@/lib/db'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-
-const STATUS_LABELS = {
-  wantToLearn: 'Want to learn', learning: 'Learning',
-  comfortable: 'Comfortable', performanceReady: 'Performance ready',
-} as const
+import { findAllSongs, STATUS_LABELS } from '@/lib/songs/repository'
 
 export default async function SongsPage() {
-  const songs = await db.query.songs.findMany({ orderBy: (s, { desc }) => [desc(s.createdAt)] })
+  const songs = await findAllSongs()
 
   return (
     <div className="max-w-3xl mx-auto px-5 py-6">

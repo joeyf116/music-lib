@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, ExternalLink, Play, Pause, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useChordLibrary } from '@/hooks/useChordLibrary'
+import { useLibrary } from '@/contexts/LibraryContext'
 import { useApp } from '@/contexts/AppContext'
 import ChordBox from '@/components/diagrams/ChordBox'
 import type { Song } from '@/lib/db/schema'
@@ -52,7 +52,7 @@ interface Props { song: Song }
 
 export default function PracticeClient({ song }: Props) {
   const router = useRouter()
-  const { lookup } = useChordLibrary()
+  const { search: lookup } = useLibrary()
   const { prefs } = useApp()
   const [chordIdx, setChordIdx] = useState(0)
   const chords = song.chordProgression as string[]

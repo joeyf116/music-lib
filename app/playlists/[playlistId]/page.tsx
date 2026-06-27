@@ -1,27 +1,20 @@
 export const dynamic = 'force-dynamic'
 import { notFound } from 'next/navigation'
-import { eq } from 'drizzle-orm'
 import Link from 'next/link'
 import { ArrowLeft, Edit2, Play, ChevronRight } from 'lucide-react'
-import { db } from '@/lib/db'
-import { playlists } from '@/lib/db/schema'
 import DeletePlaylistButton from '@/components/playlists/DeletePlaylistButton'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { findPlaylistWithOrderedSongs } from '@/lib/playlists/repository'
 
 export default async function PlaylistDetailPage({ params }: { params: Promise<{ playlistId: string }> }) {
   const { playlistId } = await params
-  const playlist = await db.query.playlists.findFirst({ where: eq(playlists.id, playlistId) })
-  if (!playlist) notFound()
+  const result = await findPlaylistWithOrderedSongs(playlistId)
+  if (!result) notFound()
 
-  const songIdList = playlist.songIds as string[]
-  const songsData = songIdList.length > 0
-    ? await db.query.songs.findMany({ columns: { id: true, title: true, artist: true, key: true } })
-    : []
-  const songMap = new Map(songsData.map((s) => [s.id, s]))
-  const orderedSongs = songIdList.map((id) => songMap.get(id)).filter(Boolean)
+  const { playlist, songs: orderedSongs } = result
 
   return (
     <div className="max-w-2xl mx-auto px-5 py-6">
@@ -60,7 +53,7 @@ export default async function PlaylistDetailPage({ params }: { params: Promise<{
 
       {orderedSongs.length > 0 && (
         <Card className="overflow-hidden">
-          {orderedSongs.map((song, i) => song && (
+          {orderedSongs.map((song, i) => (
             <div key={song.id}>
               <Link href={`/songs/${song.id}`} className="flex items-center gap-3 px-4 py-3.5 hover:bg-accent transition-colors">
                 <span className="text-xs text-muted-foreground w-5 text-center flex-shrink-0">{i + 1}</span>

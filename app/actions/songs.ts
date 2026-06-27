@@ -2,27 +2,28 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { eq } from 'drizzle-orm'
-import { db } from '@/lib/db'
-import { songs } from '@/lib/db/schema'
-import { newSongId, parseSongFields } from '@/lib/form-parsing'
+import {
+  parseSongFields,
+  insertSong,
+  updateSong as dbUpdateSong,
+  removeSong,
+} from '@/lib/songs/repository'
 
 export async function createSong(formData: FormData) {
-  const id = newSongId()
-  await db.insert(songs).values({ id, ...parseSongFields(formData) })
+  const id = await insertSong(parseSongFields(formData))
   revalidatePath('/songs')
   redirect(`/songs/${id}`)
 }
 
 export async function updateSong(id: string, formData: FormData) {
-  await db.update(songs).set({ ...parseSongFields(formData), updatedAt: new Date() }).where(eq(songs.id, id))
+  await dbUpdateSong(id, parseSongFields(formData))
   revalidatePath(`/songs/${id}`)
   revalidatePath('/songs')
   redirect(`/songs/${id}`)
 }
 
 export async function deleteSong(id: string) {
-  await db.delete(songs).where(eq(songs.id, id))
+  await removeSong(id)
   revalidatePath('/songs')
   redirect('/songs')
 }

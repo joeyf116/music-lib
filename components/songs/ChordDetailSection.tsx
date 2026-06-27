@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { Music } from 'lucide-react'
-import { useChordLibrary } from '@/hooks/useChordLibrary'
+import { useLibrary } from '@/contexts/LibraryContext'
 import { useApp } from '@/contexts/AppContext'
 import ChordBox from '@/components/diagrams/ChordBox'
 import { Card } from '@/components/ui/card'
@@ -10,7 +10,7 @@ import { Card } from '@/components/ui/card'
 interface Props { chords: string[] }
 
 export default function ChordDetailSection({ chords }: Props) {
-  const { lookup, loading } = useChordLibrary()
+  const { search, loading } = useLibrary()
   const { prefs } = useApp()
 
   if (loading) return <p className="text-xs text-muted-foreground">Loading voicings…</p>
@@ -18,7 +18,7 @@ export default function ChordDetailSection({ chords }: Props) {
   return (
     <div>
       {chords.map((chord) => {
-        const voicings = lookup(chord)
+        const voicings = search(chord)
         return (
           <div key={chord} className="mb-5">
             <p className="text-sm font-semibold text-foreground mb-2.5">{chord}</p>

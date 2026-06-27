@@ -1,8 +1,8 @@
 export const dynamic = 'force-dynamic'
-import { db } from '@/lib/db'
 import PlaylistForm from '@/components/playlists/PlaylistForm'
+import { findSongSummaries } from '@/lib/songs/repository'
 
 export default async function NewPlaylistPage() {
-  const songs = await db.query.songs.findMany({ columns: { id: true, title: true, artist: true } })
+  const songs = await findSongSummaries()
   return <PlaylistForm songs={songs} />
 }
