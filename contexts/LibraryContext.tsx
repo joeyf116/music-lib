@@ -18,6 +18,8 @@ interface LibraryContextValue {
   search: (name: string) => LibraryEntry[]
   /** Exact filter for the chord browser — root + quality */
   browse: (root: string, quality: string) => LibraryEntry[]
+  /** Filter scales by root + scale type */
+  browseScale: (root: string, scaleType: string) => LibraryEntry[]
 }
 
 const LibraryContext = createContext<LibraryContextValue | null>(null)
@@ -87,8 +89,19 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
     [entries],
   )
 
+  const browseScale = useCallback(
+    (root: string, scaleType: string): LibraryEntry[] =>
+      entries.filter(
+        (e) =>
+          e.type === 'scale' &&
+          e.root?.toUpperCase() === root.toUpperCase() &&
+          e.scale_type === scaleType,
+      ),
+    [entries],
+  )
+
   return (
-    <LibraryContext.Provider value={{ entries, loading, error, search, browse }}>
+    <LibraryContext.Provider value={{ entries, loading, error, search, browse, browseScale }}>
       {children}
     </LibraryContext.Provider>
   )

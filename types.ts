@@ -9,8 +9,10 @@ export type NoteName =
 
 export type ChordQuality =
   | 'major' | 'minor' | '7' | 'maj7' | 'm7'
-  | 'sus2' | 'sus4' | 'dim' | 'aug' | 'add9'
-  | '6' | 'm6' | '9' | 'm9' | '11' | '13'
+  | 'sus2' | 'sus4' | 'dim' | 'aug'
+  | 'mMaj7' | 'dim7' | 'm7b5'
+  | 'add9' | '6' | 'm6' | '9'
+  | 'm9' | '11' | '13'
 
 export type PracticeStatus = 'wantToLearn' | 'learning' | 'comfortable' | 'performanceReady'
 

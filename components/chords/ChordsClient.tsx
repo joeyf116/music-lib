@@ -10,11 +10,22 @@ import { Card } from '@/components/ui/card'
 
 const NOTES: NoteName[] = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']
 const QUALITIES: { value: ChordQuality; label: string }[] = [
-  { value: 'major', label: 'Major' }, { value: 'minor', label: 'Minor' },
-  { value: '7', label: '7' }, { value: 'maj7', label: 'Maj7' },
-  { value: 'm7', label: 'm7' }, { value: 'sus2', label: 'sus2' },
-  { value: 'sus4', label: 'sus4' }, { value: 'dim', label: 'dim' },
-  { value: 'aug', label: 'aug' },
+  { value: 'major',  label: 'Major'  },
+  { value: 'minor',  label: 'Minor'  },
+  { value: '7',      label: '7'      },
+  { value: 'maj7',   label: 'Maj7'   },
+  { value: 'm7',     label: 'm7'     },
+  { value: 'mMaj7',  label: 'mMaj7'  },
+  { value: 'dim',    label: 'dim'    },
+  { value: 'dim7',   label: 'dim7'   },
+  { value: 'm7b5',   label: 'm7♭5'   },
+  { value: 'aug',    label: 'aug'    },
+  { value: 'sus2',   label: 'sus2'   },
+  { value: 'sus4',   label: 'sus4'   },
+  { value: 'add9',   label: 'add9'   },
+  { value: '6',      label: '6'      },
+  { value: 'm6',     label: 'm6'     },
+  { value: '9',      label: '9'      },
 ]
 
 export default function ChordsClient() {

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Music2, BookOpen, ListMusic, Play, Sun, Moon, FlipHorizontal } from 'lucide-react'
+import { Home, Music2, BookOpen, ListMusic, Play, Sun, Moon, FlipHorizontal, Layers } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useApp } from '@/contexts/AppContext'
 import {
@@ -18,6 +18,7 @@ import {
 const NAV = [
   { to: '/', icon: Home, label: 'Home' },
   { to: '/chords', icon: Music2, label: 'Chords' },
+  { to: '/scales', icon: Layers, label: 'Scales' },
   { to: '/songs', icon: BookOpen, label: 'Songs' },
   { to: '/playlists', icon: ListMusic, label: 'Playlists' },
   { to: '/practice', icon: Play, label: 'Practice' },
