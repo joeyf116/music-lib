@@ -62,5 +62,4 @@ export interface LibraryEntry {
 
 export interface AppPreferences {
   leftHanded: boolean
-  theme: 'dark' | 'light'
 }

@@ -6,6 +6,10 @@ import { ArrowLeft, Edit2, Play, ChevronRight } from 'lucide-react'
 import { db } from '@/lib/db'
 import { playlists } from '@/lib/db/schema'
 import DeletePlaylistButton from '@/components/playlists/DeletePlaylistButton'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 
 export default async function PlaylistDetailPage({ params }: { params: Promise<{ playlistId: string }> }) {
   const { playlistId } = await params
@@ -22,57 +26,57 @@ export default async function PlaylistDetailPage({ params }: { params: Promise<{
   return (
     <div className="max-w-2xl mx-auto px-5 py-6">
       <div className="flex items-center justify-between mb-5">
-        <Link href="/playlists" className="flex items-center gap-1.5" style={{ color: 'var(--color-muted)', fontSize: 13 }}>
-          <ArrowLeft size={13} /> Playlists
+        <Link href="/playlists" className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft className="size-3.5" /> Playlists
         </Link>
         <div className="flex items-center gap-2">
-          <Link href={`/playlists/${playlist.id}/edit`} className="btn-ghost"><Edit2 size={12} /> Edit</Link>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link href={`/playlists/${playlist.id}/edit`} />}>
+            <Edit2 data-icon="inline-start" /> Edit
+          </Button>
           <DeletePlaylistButton id={playlist.id} name={playlist.name} />
         </div>
       </div>
 
-      <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text)', marginBottom: 4, letterSpacing: '-0.3px' }}>
-        {playlist.name}
-      </h1>
-      {playlist.description && <p style={{ fontSize: 13, color: 'var(--color-text-dim)', marginBottom: 4 }}>{playlist.description}</p>}
-      {playlist.practiceGoal && <p style={{ fontSize: 12, color: 'var(--color-muted)', marginBottom: 16 }}>Goal: {playlist.practiceGoal}</p>}
+      <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">{playlist.name}</h1>
+      {playlist.description && <p className="text-sm text-muted-foreground mb-1">{playlist.description}</p>}
+      {playlist.practiceGoal && <p className="text-xs text-muted-foreground mb-4">Goal: {playlist.practiceGoal}</p>}
 
       {orderedSongs.length > 0 && (
-        <Link href={`/practice/playlist/${playlist.id}`} className="btn-primary mb-6 inline-flex">
-          <Play size={12} /> Practice Playlist
-        </Link>
+        <Button className="mb-6" nativeButton={false} render={<Link href={`/practice/playlist/${playlist.id}`} />}>
+          <Play data-icon="inline-start" /> Practice Playlist
+        </Button>
       )}
 
-      <p className="section-label mb-3">Songs ({orderedSongs.length})</p>
+      <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+        Songs ({orderedSongs.length})
+      </p>
 
       {orderedSongs.length === 0 && (
-        <p style={{ fontSize: 13, color: 'var(--color-muted)' }}>
+        <p className="text-sm text-muted-foreground">
           No songs yet.{' '}
-          <Link href={`/playlists/${playlist.id}/edit`} style={{ color: 'var(--color-accent)' }}>Add songs →</Link>
+          <Link href={`/playlists/${playlist.id}/edit`} className="text-primary hover:text-primary/80">Add songs →</Link>
         </p>
       )}
 
       {orderedSongs.length > 0 && (
-        <div className="card overflow-hidden">
+        <Card className="overflow-hidden">
           {orderedSongs.map((song, i) => song && (
-            <Link
-              key={song.id}
-              href={`/songs/${song.id}`}
-              className="flex items-center gap-3 px-4 py-3.5 card-hover"
-              style={{ borderBottom: i < orderedSongs.length - 1 ? '1px solid var(--color-border)' : 'none' }}
-            >
-              <span style={{ fontSize: 12, color: 'var(--color-muted)', width: 20, textAlign: 'center', flexShrink: 0 }}>{i + 1}</span>
-              <div className="flex-1 min-w-0">
-                <p style={{ fontSize: 13, fontWeight: 500, color: 'var(--color-text)' }} className="truncate">{song.title}</p>
-                <p style={{ fontSize: 12, color: 'var(--color-muted)' }} className="truncate">{song.artist}</p>
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                {song.key && <span className="chip">{song.key}</span>}
-                <ChevronRight size={13} style={{ color: 'var(--color-border-strong)' }} />
-              </div>
-            </Link>
+            <div key={song.id}>
+              <Link href={`/songs/${song.id}`} className="flex items-center gap-3 px-4 py-3.5 hover:bg-accent transition-colors">
+                <span className="text-xs text-muted-foreground w-5 text-center flex-shrink-0">{i + 1}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{song.title}</p>
+                  <p className="text-xs text-muted-foreground truncate">{song.artist}</p>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {song.key && <Badge variant="secondary">{song.key}</Badge>}
+                  <ChevronRight className="size-3.5 text-muted-foreground" />
+                </div>
+              </Link>
+              {i < orderedSongs.length - 1 && <Separator />}
+            </div>
           ))}
-        </div>
+        </Card>
       )}
     </div>
   )

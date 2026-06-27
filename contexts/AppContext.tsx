@@ -21,7 +21,7 @@ function storageSet<T>(key: string, value: T) {
   localStorage.setItem(key, JSON.stringify(value))
 }
 
-const DEFAULT_PREFS: AppPreferences = { leftHanded: false, theme: 'dark' }
+const DEFAULT_PREFS: AppPreferences = { leftHanded: false }
 
 interface AppContextValue {
   recentlyViewed: LibraryEntry[]
@@ -40,12 +40,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setRecentlyViewed(storageGet<LibraryEntry[]>(KEYS.recentlyViewed, []))
     setPrefs(storageGet<AppPreferences>(KEYS.prefs, DEFAULT_PREFS))
   }, [])
-
-  useEffect(() => {
-    const html = document.documentElement
-    if (prefs.theme === 'light') html.classList.add('light')
-    else html.classList.remove('light')
-  }, [prefs.theme])
 
   const trackViewed = useCallback((entry: LibraryEntry) => {
     setRecentlyViewed((prev) => {
