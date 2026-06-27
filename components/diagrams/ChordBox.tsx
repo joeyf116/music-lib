@@ -3,12 +3,12 @@
 import type { Diagram, DiagramPosition } from '@/types'
 
 const C_STRINGS = 6
-const C_ROWS = 4
-const CW = 34
-const CH = 34
-const CL = 28
-const CT = 32
-const CDR = 11
+const C_ROWS = 5
+const CW = 30
+const CH = 28
+const CL = 26   // left margin (for fret labels)
+const CT = 30   // top margin (for open/muted markers)
+const CDR = 10  // dot radius
 
 interface ChordBoxProps {
   diagram: Diagram
@@ -23,8 +23,9 @@ export default function ChordBox({ diagram, leftHanded = false }: ChordBoxProps)
   const minFret = frettedPos.length > 0 ? Math.min(...frettedPos.map((p) => p.fret)) : 1
   const startFret = isOpen ? 1 : minFret
 
-  const svgW = CL + (C_STRINGS - 1) * CW + CL
-  const svgH = CT + C_ROWS * CH + 22
+  const gridW = (C_STRINGS - 1) * CW
+  const svgW = CL + gridW + 10
+  const svgH = CT + C_ROWS * CH + 18
 
   function sx(stringIdx: number): number {
     const idx = leftHanded ? stringIdx : C_STRINGS - 1 - stringIdx
@@ -45,32 +46,19 @@ export default function ChordBox({ diagram, leftHanded = false }: ChordBoxProps)
       <rect
         x={CL}
         y={CT}
-        width={(C_STRINGS - 1) * CW}
+        width={gridW}
         height={C_ROWS * CH}
-        fill="var(--color-surface)"
+        fill="var(--chord-bg, var(--color-surface))"
       />
 
-      {/* Fret position label */}
-      {!isOpen && (
-        <text
-          x={CL - 6}
-          y={CT + CH / 2 + 4}
-          textAnchor="end"
-          fontSize="10"
-          fontFamily="monospace"
-          fill="var(--color-muted)"
-        >
-          {startFret}fr
-        </text>
-      )}
-
-      {/* Nut bar (open position) */}
+      {/* Nut bar (open position only) */}
       {isOpen && (
         <rect
           x={CL}
-          y={CT - 4}
-          width={(C_STRINGS - 1) * CW}
-          height={4}
+          y={CT - 5}
+          width={gridW}
+          height={5}
+          rx={1}
           fill="var(--color-text)"
         />
       )}
@@ -81,14 +69,14 @@ export default function ChordBox({ diagram, leftHanded = false }: ChordBoxProps)
           key={i}
           x1={CL}
           y1={CT + i * CH}
-          x2={CL + (C_STRINGS - 1) * CW}
+          x2={CL + gridW}
           y2={CT + i * CH}
           stroke="var(--color-border)"
-          strokeWidth={i === 0 ? 1.5 : 1}
+          strokeWidth={1}
         />
       ))}
 
-      {/* String lines — uniform thin lines */}
+      {/* String lines */}
       {Array.from({ length: C_STRINGS }, (_, s) => (
         <line
           key={s}
@@ -101,6 +89,21 @@ export default function ChordBox({ diagram, leftHanded = false }: ChordBoxProps)
         />
       ))}
 
+      {/* Fret row labels on the left — (1)(2)(3)… */}
+      {Array.from({ length: C_ROWS }, (_, i) => (
+        <text
+          key={i}
+          x={CL - 4}
+          y={CT + i * CH + CH / 2 + 4}
+          textAnchor="end"
+          fontSize="9"
+          fontFamily="sans-serif"
+          fill="var(--color-muted)"
+        >
+          ({startFret + i})
+        </text>
+      ))}
+
       {/* Barre chord bar */}
       {barre && (
         <rect
@@ -109,7 +112,8 @@ export default function ChordBox({ diagram, leftHanded = false }: ChordBoxProps)
           width={(barre.to_string - barre.from_string) * CW + CDR * 2}
           height={CDR * 2}
           rx={CDR}
-          fill="var(--color-accent)"
+          fill="var(--color-text)"
+          opacity={0.85}
         />
       )}
 
@@ -134,10 +138,10 @@ export default function ChordBox({ diagram, leftHanded = false }: ChordBoxProps)
             <circle
               key={idx}
               cx={x}
-              cy={CT - 12}
+              cy={CT - 11}
               r={5}
               fill="none"
-              stroke={pos.role === 'root' ? 'var(--color-accent)' : 'var(--color-muted)'}
+              stroke={pos.role === 'root' ? 'var(--color-accent)' : 'var(--color-border-strong)'}
               strokeWidth={1.5}
             />
           )
@@ -156,10 +160,10 @@ export default function ChordBox({ diagram, leftHanded = false }: ChordBoxProps)
                 x={x}
                 y={fy + 4}
                 textAnchor="middle"
-                fontSize="10"
-                fontWeight="600"
-                fontFamily="monospace"
-                fill={isRoot ? '#ffffff' : 'var(--color-bg)'}
+                fontSize="9"
+                fontWeight="700"
+                fontFamily="sans-serif"
+                fill="var(--color-bg, #ffffff)"
               >
                 {pos.finger}
               </text>
@@ -173,10 +177,10 @@ export default function ChordBox({ diagram, leftHanded = false }: ChordBoxProps)
         <text
           key={i}
           x={CL + i * CW}
-          y={svgH - 4}
+          y={svgH - 3}
           textAnchor="middle"
           fontSize="8"
-          fontFamily="monospace"
+          fontFamily="sans-serif"
           fill="var(--color-muted)"
         >
           {note}
