@@ -57,6 +57,7 @@ export interface LibraryEntry {
   tab?: string
   diagram?: Diagram
   formula?: string
+  notes?: string
   tags: string[]
 }
 

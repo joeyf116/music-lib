@@ -2,31 +2,42 @@
 
 import { useState, useMemo } from 'react'
 import { useLibrary } from '@/contexts/LibraryContext'
-import ChordBox from '@/components/diagrams/ChordBox'
+import ScaleDiagram from '@/components/diagrams/ScaleDiagram'
 import { useApp } from '@/contexts/AppContext'
 import type { NoteName } from '@/types'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 
 const NOTES: NoteName[] = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']
 
-const SCALE_TYPES: { value: string; label: string; category: string }[] = [
-  { value: 'major',            label: 'Major',            category: 'Diatonic' },
-  { value: 'natural_minor',    label: 'Natural Minor',    category: 'Diatonic' },
-  { value: 'harmonic_minor',   label: 'Harmonic Minor',   category: 'Diatonic' },
-  { value: 'melodic_minor',    label: 'Melodic Minor',    category: 'Diatonic' },
-  { value: 'dorian',           label: 'Dorian',           category: 'Mode' },
-  { value: 'phrygian',         label: 'Phrygian',         category: 'Mode' },
-  { value: 'lydian',           label: 'Lydian',           category: 'Mode' },
-  { value: 'mixolydian',       label: 'Mixolydian',       category: 'Mode' },
-  { value: 'locrian',          label: 'Locrian',          category: 'Mode' },
-  { value: 'major_pentatonic', label: 'Major Pentatonic', category: 'Pentatonic' },
-  { value: 'minor_pentatonic', label: 'Minor Pentatonic', category: 'Pentatonic' },
-  { value: 'blues',            label: 'Blues',            category: 'Pentatonic' },
+const SCALE_GROUPS = [
+  {
+    label: 'Major & Minor',
+    scales: [
+      { value: 'major',          label: 'Major'          },
+      { value: 'natural_minor',  label: 'Natural Minor'  },
+      { value: 'harmonic_minor', label: 'Harmonic Minor' },
+      { value: 'melodic_minor',  label: 'Melodic Minor'  },
+    ],
+  },
+  {
+    label: 'Modes',
+    scales: [
+      { value: 'dorian',     label: 'Dorian'     },
+      { value: 'phrygian',   label: 'Phrygian'   },
+      { value: 'lydian',     label: 'Lydian'      },
+      { value: 'mixolydian', label: 'Mixolydian'  },
+      { value: 'locrian',    label: 'Locrian'     },
+    ],
+  },
+  {
+    label: 'Pentatonic & Blues',
+    scales: [
+      { value: 'major_pentatonic', label: 'Major Pent.'  },
+      { value: 'minor_pentatonic', label: 'Minor Pent.'  },
+      { value: 'blues',            label: 'Blues'         },
+    ],
+  },
 ]
-
-const CATEGORIES = ['Diatonic', 'Mode', 'Pentatonic'] as const
 
 export default function ScalesClient() {
   const { browseScale, loading } = useLibrary()
@@ -34,44 +45,44 @@ export default function ScalesClient() {
   const [root, setRoot] = useState<NoteName>('A')
   const [scaleType, setScaleType] = useState('minor_pentatonic')
 
-  const results = useMemo(() => browseScale(root, scaleType), [browseScale, root, scaleType])
-  const entry = results[0]
+  const entry = useMemo(() => browseScale(root, scaleType)[0], [browseScale, root, scaleType])
 
-  const currentMeta = SCALE_TYPES.find(s => s.value === scaleType)
+  // Split notes string ("A – C – D – E – G") into individual note names
+  const noteList = entry?.notes?.split(' – ') ?? []
 
   return (
-    <div className="max-w-3xl mx-auto px-5 py-6">
-      <h1 className="text-xl font-bold tracking-tight mb-5">Scales</h1>
+    <div className="max-w-2xl mx-auto px-5 py-6">
+      <h1 className="text-xl font-bold tracking-tight mb-6">Scales</h1>
 
-      {/* Root selector */}
+      {/* Root */}
       <div className="mb-5">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Root</p>
+        <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-2">Root note</p>
         <ToggleGroup
           value={[root]}
-          onValueChange={(vals) => { if (vals.length > 0) setRoot(vals[0] as NoteName) }}
+          onValueChange={(v) => { if (v.length) setRoot(v[0] as NoteName) }}
           className="flex flex-wrap gap-1.5 justify-start"
         >
           {NOTES.map((n) => (
-            <ToggleGroupItem key={n} value={n} className="rounded-full px-3.5 py-1 text-xs font-medium">
+            <ToggleGroupItem key={n} value={n} className="rounded-full px-3 py-1 text-xs font-semibold min-w-[36px] text-center">
               {n}
             </ToggleGroupItem>
           ))}
         </ToggleGroup>
       </div>
 
-      {/* Scale type selector grouped by category */}
-      <div className="mb-7 space-y-3">
-        {CATEGORIES.map((cat) => (
-          <div key={cat}>
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">{cat}</p>
+      {/* Scale type — grouped */}
+      <div className="mb-8 space-y-3">
+        {SCALE_GROUPS.map(({ label, scales }) => (
+          <div key={label}>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1.5">{label}</p>
             <ToggleGroup
               value={[scaleType]}
-              onValueChange={(vals) => { if (vals.length > 0) setScaleType(vals[0]) }}
+              onValueChange={(v) => { if (v.length) setScaleType(v[0]) }}
               className="flex flex-wrap gap-1.5 justify-start"
             >
-              {SCALE_TYPES.filter(s => s.category === cat).map(({ value, label }) => (
+              {scales.map(({ value, label: lbl }) => (
                 <ToggleGroupItem key={value} value={value} className="rounded-full px-3.5 py-1 text-xs font-medium">
-                  {label}
+                  {lbl}
                 </ToggleGroupItem>
               ))}
             </ToggleGroup>
@@ -82,64 +93,63 @@ export default function ScalesClient() {
       {loading && <p className="text-sm text-muted-foreground">Loading…</p>}
 
       {!loading && !entry && (
-        <Card className="p-8 text-center">
-          <p className="text-sm font-semibold mb-1">No data for {root} {currentMeta?.label}</p>
-          <p className="text-sm text-muted-foreground">Try a different root or scale type.</p>
-        </Card>
+        <p className="text-sm text-muted-foreground">No data found for this selection.</p>
       )}
 
       {!loading && entry && (
-        <div className="space-y-5">
-          {/* Header */}
-          <div className="flex items-baseline gap-3 flex-wrap">
-            <h2 className="text-2xl font-bold text-foreground">{entry.name}</h2>
-            {entry.difficulty && (
-              <Badge variant="secondary" className="text-xs">{entry.difficulty}</Badge>
-            )}
+        <div className="space-y-6">
+
+          {/* Scale name + formula */}
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-1">{entry.name}</h2>
+            <p className="text-sm text-muted-foreground font-mono">{entry.formula}</p>
           </div>
 
-          {/* Formula + Notes */}
-          <div className="grid sm:grid-cols-2 gap-3">
-            <Card className="p-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Formula</p>
-              <p className="font-mono text-sm text-foreground">{entry.formula}</p>
-            </Card>
-            {(entry as any).notes && (
-              <Card className="p-4">
-                <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2">Notes in {root}</p>
-                <p className="font-mono text-sm text-foreground">{(entry as any).notes}</p>
-              </Card>
-            )}
+          {/* Notes in key — pill row */}
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-2">Notes in {root}</p>
+            <div className="flex flex-wrap gap-2">
+              {noteList.map((note, i) => {
+                const isRoot = note === root
+                return (
+                  <span
+                    key={i}
+                    className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                      isRoot
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-foreground'
+                    }`}
+                  >
+                    {note}
+                  </span>
+                )
+              })}
+            </div>
           </div>
 
           {/* Fretboard diagram */}
           {entry.diagram && (
-            <Card className="p-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-                Box Pattern — {entry.position}
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+                Position 1 — {entry.position}
               </p>
-              <div className="flex justify-start">
-                <ChordBox diagram={entry.diagram} leftHanded={prefs.leftHanded} />
+              <div className="inline-block p-3 rounded-xl border border-border bg-card">
+                <ScaleDiagram diagram={entry.diagram} leftHanded={prefs.leftHanded} />
               </div>
-            </Card>
+              <p className="text-xs text-muted-foreground mt-2">
+                Accent dot = root note
+              </p>
+            </div>
           )}
 
           {/* Tab */}
           {entry.tab && (
-            <Card className="p-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">Tab</p>
-              <pre className="font-mono text-xs text-foreground leading-relaxed whitespace-pre">{entry.tab}</pre>
-            </Card>
-          )}
-
-          {/* Tags */}
-          {entry.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
-              {entry.tags.filter(t => !NOTES.includes(t as NoteName) && t !== entry.scale_type).map((tag) => (
-                <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
-              ))}
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-2">Tab</p>
+              <pre className="font-mono text-xs leading-6 text-foreground bg-muted rounded-lg px-4 py-3 w-fit">{entry.tab}</pre>
             </div>
           )}
+
         </div>
       )}
     </div>

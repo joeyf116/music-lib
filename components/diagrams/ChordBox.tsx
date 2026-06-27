@@ -100,7 +100,7 @@ export default function ChordBox({ diagram, leftHanded = false }: ChordBoxProps)
           fontFamily="sans-serif"
           fill="var(--color-muted)"
         >
-          ({startFret + i})
+          {startFret + i}
         </text>
       ))}
 
